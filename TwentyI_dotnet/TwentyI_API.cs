@@ -203,5 +203,122 @@ public class TwentyI_API
     
     #endregion
     
+    #region MSSQL Endpoints
+    /// <summary>
+    /// Retrieve MSSQL Databases
+    /// </summary>
+    /// <see cref="https://api.20i.com/mssql"/>
+    /// <returns>The raw json response as a string</returns>
+    public async Task<string> GetMssql()
+    {
+        var url = _baseUrl + "mssql";
+        var response = await _requestHandler.GetAsync(url, _bearer);
+        return response;
+    }
     
+    /// <summary>
+    /// Retrieve MSSQL Database by ID
+    /// </summary>
+    /// <see cref="https://api.20i.com/mssql/{id}"/>
+    /// <param name="id">The id of the mssql database</param>
+    /// <returns>The raw json response as a string</returns>
+    public async Task<string> GetMssqlById(string id)
+    {
+        var url = _baseUrl + "mssql/" + id;
+        var response = await _requestHandler.GetAsync(url, _bearer);
+        return response;
+    }
+    
+    /// <summary>
+    /// Update the config to link the MS SQL product to a package.
+    /// </summary>
+    /// <see cref="https://api.20i.com/mssql/{id}"/>
+    /// <remarks> Json sample body: { id:1 } </remarks>
+    /// <param name="id">The id of the mssql database</param>
+    /// <param name="body">The json body to send</param>
+    /// <returns>The raw json response as a string</returns>
+    public async Task<string> MssqlLinkPackage(string id, string body)
+    {
+        var url = _baseUrl + "mssql/" + id;
+        var response = await _requestHandler.PostAsync(url, body, _bearer);
+        return response;
+    }
+    
+    #endregion
+    
+    #region Packages Endpoints
+    
+    /// <summary>
+    /// Activates or deactivates the service. Possible subservice_name are 'default' for a typical set of services and 'main' for the core service only.
+    /// </summary>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/userStatus"/>
+    /// <remarks> Json sample body: { includeRepeated: true, subservices:{ (subservice_name): true } } </remarks>
+    /// <param name="packageId">The id of the package</param>
+    /// <param name="domainId">The id of the domain</param>
+    /// <param name="body">The json body to send</param>
+    /// <returns>The raw json response as a string</returns>
+    public async Task<string> PackageDomainUserStatus(string packageId, string domainId, string body)
+    {
+        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/userStatus";
+        var response = await _requestHandler.PostAsync(url, body, _bearer);
+        return response;
+    }
+    
+    /// <summary>
+    /// Activates or deactivates the service. Possible subservice_name are 'default' for a typical set of services and 'main' for the core service only.
+    /// </summary>
+    /// <see cref="https://api.20i.com/package/{package_id}/userStatus"/>
+    /// <remarks> Json sample body: { includeRepeated: true, subservices:{ (subservice_name): true } } </remarks>
+    /// <param name="packageId">The id of the package</param>
+    /// <param name="body">The json body to send</param>
+    /// <returns>The raw json response as a string</returns>
+    public async Task<string> PackageUserStatus(string packageId, string body)
+    {
+        var url = _baseUrl + "package/" + packageId + "/userStatus";
+        var response = await _requestHandler.PostAsync(url, body, _bearer);
+        return response;
+    }
+    
+    /// <summary>
+    /// Return a list of installed applications
+    /// </summary>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/installedApplications"/>
+    /// <param name="packageId">The id of the package</param>
+    /// <returns>The raw json response as a string</returns>
+    public async Task<string> PackageWebInstalledApplications(string packageId)
+    {
+        var url = _baseUrl + "package/" + packageId + "/web/installedApplications";
+        var response = await _requestHandler.GetAsync(url, _bearer);
+        return response;
+    }
+    
+    /// <summary>
+    /// Add, remove and update applications and set their environment Currently only one type (add,update,delete,setEnv) is supported per request.
+    /// </summary>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/installedApplications"/>
+    /// <param name="packageId">The id of the package</param>
+    /// <remarks>json sample { add:{ domain: "string", environment: "string", name: "string", path: "string", script: "string", typeCode: "string" }, update:{ domain: "string", environment: "string", name: "string", path: "string", script: "string", typeCode: "string" }, delete:{ id: "string" }, setEnv:{ id: "string", environment: "string" } }</remarks>
+    /// <param name="body">The json body to send</param>
+    /// <returns>The raw json response as a string</returns>
+    public async Task<string> PackageWebInstalledApplications(string packageId, string body)
+    {
+        var url = _baseUrl + "package/" + packageId + "/web/installedApplications";
+        var response = await _requestHandler.PostAsync(url, body, _bearer);
+        return response;
+    }
+    
+    /// <summary>
+    /// Returns a list of installed software by type code on managed server.
+    /// </summary>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/installedSoftware"/>
+    /// <param name="packageId">The id of the package</param>
+    /// <returns>The raw json response as a string</returns>
+    public async Task<string> PackageWebInstalledSoftware(string packageId)
+    {
+        var url = _baseUrl + "package/" + packageId + "/web/installedSoftware";
+        var response = await _requestHandler.GetAsync(url, _bearer);
+        return response;
+    }
+    
+    #endregion
 }
