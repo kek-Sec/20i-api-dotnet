@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json;
 using TwentyI_dotnet.Interfaces;
 
 namespace TwentyI_dotnet;
@@ -55,7 +55,7 @@ public class RequestHandler : IRequestHandler
     public string PostSync(string url, string token, object body)
     {
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = _client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json")).Result;
+        var response = _client.PostAsync(url, new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")).Result;
         if (response.IsSuccessStatusCode)
         {
             return response.Content.ReadAsStringAsync().Result;
@@ -97,7 +97,7 @@ public class RequestHandler : IRequestHandler
     public async Task<string> PostAsync(string url, string token, object body)
     {
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json"));
+        var response = await _client.PostAsync(url, new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json"));
         if (response.IsSuccessStatusCode)
         {
             return await response.Content.ReadAsStringAsync();
