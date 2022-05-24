@@ -26,65 +26,39 @@ public class RequestHandler : IRequestHandler
     }
     
     /// <summary>
-    /// GetAsync is a generic method that will perform a GET request to the 20i api.
+    /// GetSync is a method that will perform a GET request to the 20i api.
     /// </summary>
-    /// <typeparam name="T">The type of object that will be returned from the request.</typeparam>
     /// <param name="url">The url to perform the request to.</param>
     /// <param name="token">The bearer token to use for the request.</param>
-    /// <returns>A Task that will return the object that was returned from the request.</returns>
-    public async Task<T?> GetAsync<T>(string url, string token)
-    {
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
-        if (response.IsSuccessStatusCode)
-        {
-            var responseString = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(responseString);
-        }
-        else
-        {
-            throw new Exception(response.ReasonPhrase);
-        }
-    }
-    
-    /// <summary>
-    /// PostAsync is a generic method that will perform a POST request to the 20i api.
-    /// </summary>
-    /// <typeparam name="T">The type of object that will be returned from the request.</typeparam>
-    /// <param name="url">The url to perform the request to.</param>
-    /// <param name="token">The bearer token to use for the request.</param>
-    /// <param name="body">The body of the request.</param>
-    /// <returns>A Task that will return the object that was returned from the request.</returns>
-    public async Task<T?> PostAsync<T>(string url, string token, object body)
-    {
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json"));
-        if (response.IsSuccessStatusCode)
-        {
-            var responseString = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(responseString);
-        }
-        else
-        {
-            throw new Exception(response.ReasonPhrase);
-        }
-    }
-    
-    /// <summary>
-    /// GetSync is a generic method that will perform a GET request to the 20i api.
-    /// </summary>
-    /// <typeparam name="T">The type of object that will be returned from the request.</typeparam>
-    /// <param name="url">The url to perform the request to.</param>
-    /// <param name="token">The bearer token to use for the request.</param>
-    /// <returns>The object that was returned from the request.</returns>
-    public T? GetSync<T>(string url, string token)
+    /// <returns>The json string returned from the 20i API</returns>
+    public string GetSync(string url, string token)
     {
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var response = _client.GetAsync(url).Result;
         if (response.IsSuccessStatusCode)
         {
-            var responseString = response.Content.ReadAsStringAsync().Result;
-            return JsonConvert.DeserializeObject<T>(responseString);
+            return response.Content.ReadAsStringAsync().Result;
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
+        }
+    }
+
+    /// <summary>
+    /// PostSync is a method that will perform a POST request to the 20i api.
+    /// </summary>
+    /// <param name="url">The url to perform the request to.</param>
+    /// <param name="token">The bearer token to use for the request.</param>
+    /// <param name="body">The body of the request.</param>
+    /// <returns>The json string returned from the 20i api</returns>
+    public string PostSync(string url, string token, object body)
+    {
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = _client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json")).Result;
+        if (response.IsSuccessStatusCode)
+        {
+            return response.Content.ReadAsStringAsync().Result;
         }
         else
         {
@@ -93,27 +67,49 @@ public class RequestHandler : IRequestHandler
     }
     
     /// <summary>
-    /// PostSync is a generic method that will perform a POST request to the 20i api.
+    /// GetAsync is a method that will perform a GET request to the 20i api.
     /// </summary>
-    /// <typeparam name="T">The type of object that will be returned from the request.</typeparam>
     /// <param name="url">The url to perform the request to.</param>
     /// <param name="token">The bearer token to use for the request.</param>
-    /// <param name="body">The body of the request.</param>
-    /// <returns>The object that was returned from the request.</returns>
-    public T? PostSync<T>(string url, string token, object body)
+    /// <returns>The json response string.</returns>
+    public async Task<string> GetAsync(string url, string token)
     {
-        
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = _client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json")).Result;
+        var response = await _client.GetAsync(url);
         if (response.IsSuccessStatusCode)
         {
-            var responseString = response.Content.ReadAsStringAsync().Result;
-            return JsonConvert.DeserializeObject<T>(responseString);
+            return await response.Content.ReadAsStringAsync();
         }
         else
         {
             throw new Exception(response.ReasonPhrase);
         }
     }
+
+    
+    /// <summary>
+    /// PostAsync is a method that will perform a POST request to the 20i api.
+    /// </summary>
+    /// <param name="url">The url to perform the request to.</param>
+    /// <param name="token">The bearer token to use for the request.</param>
+    /// <param name="body">The body of the request.</param>
+    /// <returns>The json string returned from the 20i api.</returns>
+    public async Task<string> PostAsync(string url, string token, object body)
+    {
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await _client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json"));
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadAsStringAsync();
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
+        }
+    }
+    
+    
+
+    
 
 }
