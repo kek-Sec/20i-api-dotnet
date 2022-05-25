@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <PackageLicenseExpression>MS-PL</PackageLicenseExpression>
         <PackageOutputPath>./nupkg</PackageOutputPath>
-        <RepositoryUrl>https://github.com/kek-Sec/TwentyI_dotnet</RepositoryUrl>
+        <RepositoryUrl>https://github.com/kek-Sec/20i-api-dotnet</RepositoryUrl>
         <RepositoryBranch>master</RepositoryBranch>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <Company>Petrakis G.</Company>
