@@ -1,5 +1,20 @@
 ﻿# 20i API dotnet libary
 
+![Nuget](https://img.shields.io/nuget/v/20i-api-dotnet?style=flat-square)
+
+#### Get started with 3 steps
+
+1. Install Nuget package
+ - ``` dotnet add package 20i-api-dotnet  ```
+
+2. Create new instance of 20i API
+ - ``` var api = new TwentyIApi(bearer,new HttpClient()); ```
+3. Use the API
+ - ```var packages = await api.Package();```
+
+**Note** <i>You can inject your own HttpClient to use your own implementation of HttpClient or an injected client from a factory.</i>
+
+
 [Official API Documentation](https://my.20i.com/reseller/apiDoc)
 
 ## Methods
