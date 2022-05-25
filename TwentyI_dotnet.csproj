@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <PackageLicenseExpression>MS-PL</PackageLicenseExpression>
+        <PackageOutputPath>./nupkg</PackageOutputPath>
+        <RepositoryUrl>https://github.com/kek-Sec/20i-api-dotnet</RepositoryUrl>
+        <RepositoryBranch>master</RepositoryBranch>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <Company>Petrakis G.</Company>
+        <Description>.net wrapper for the 20i api.</Description>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>20i;api;reseller;hosting;domain;backups;wordpress</PackageTags>
+        <NeutralLanguage>en</NeutralLanguage>
+        <AssemblyVersion>25.05.22</AssemblyVersion>
+        <FileVersion>1.1.0.0</FileVersion>
+        <PackageId>20i-api-dotnet</PackageId>
+        <PackageVersion>25.05.22</PackageVersion>
+        <Authors>Petrakis G.</Authors>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DocumentationFile>bin\Debug\TwentyI_dotnet.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\TwentyI_dotnet.xml</DocumentationFile>
+    </PropertyGroup>
+    
+</Project>
