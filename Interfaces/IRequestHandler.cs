@@ -23,7 +23,7 @@ public interface IRequestHandler
     /// <param name="token">The bearer token to use for the request.</param>
     /// <param name="body">The body of the request.</param>
     /// <returns>The json string returned from the 20i api</returns>
-     string PostSync(string url, string token, object body);
+     string PostSync(string url, string token, string body);
 
     /// <summary>
     /// GetAsync is a method that will perform a GET request to the 20i api.
@@ -40,5 +40,5 @@ public interface IRequestHandler
     /// <param name="token">The bearer token to use for the request.</param>
     /// <param name="body">The body of the request.</param>
     /// <returns>The json string returned from the 20i api.</returns>
-    Task<string> PostAsync(string url, string token, object body);
+    Task<string> PostAsync(string url, string token, string body);
 }

@@ -14,10 +14,10 @@
         <RepositoryType>git</RepositoryType>
         <PackageTags>20i;api;reseller;hosting;domain;backups;wordpress</PackageTags>
         <NeutralLanguage>en</NeutralLanguage>
-        <AssemblyVersion>25.05.22</AssemblyVersion>
+        <AssemblyVersion>25.05.22.2</AssemblyVersion>
         <FileVersion>1.1.0.0</FileVersion>
         <PackageId>20i-api-dotnet</PackageId>
-        <PackageVersion>25.05.22</PackageVersion>
+        <PackageVersion>25.05.22.2</PackageVersion>
         <Authors>Petrakis G.</Authors>
     </PropertyGroup>
 

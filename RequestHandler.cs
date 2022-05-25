@@ -52,10 +52,10 @@ public class RequestHandler : IRequestHandler
     /// <param name="token">The bearer token to use for the request.</param>
     /// <param name="body">The body of the request.</param>
     /// <returns>The json string returned from the 20i api</returns>
-    public string PostSync(string url, string token, object body)
+    public string PostSync(string url, string token, string body)
     {
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = _client.PostAsync(url, new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")).Result;
+        var response = _client.PostAsync(url, new StringContent(body, Encoding.UTF8, "application/json")).Result;
         if (response.IsSuccessStatusCode)
         {
             return response.Content.ReadAsStringAsync().Result;
@@ -94,10 +94,10 @@ public class RequestHandler : IRequestHandler
     /// <param name="token">The bearer token to use for the request.</param>
     /// <param name="body">The body of the request.</param>
     /// <returns>The json string returned from the 20i api.</returns>
-    public async Task<string> PostAsync(string url, string token, object body)
+    public async Task<string> PostAsync(string url, string token, string body)
     {
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.PostAsync(url, new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json"));
+        var response = await _client.PostAsync(url, new StringContent(body, Encoding.UTF8, "application/json"));
         if (response.IsSuccessStatusCode)
         {
             return await response.Content.ReadAsStringAsync();
