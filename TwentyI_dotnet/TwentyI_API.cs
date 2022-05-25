@@ -1,35 +1,37 @@
-﻿using TwentyI_dotnet.Interfaces;
+﻿using System.Text;
+using TwentyI_dotnet.Interfaces;
 
 namespace TwentyI_dotnet;
+
 /// <summary>
-/// Library entry class 
+///     Library entry class
 /// </summary>
 public class TwentyIApi
 {
-    private readonly HttpClient _client;
     private readonly string _baseUrl = "https://api.20i.com/";
     private readonly string _bearer;
+    private readonly HttpClient _client;
     private readonly IRequestHandler _requestHandler;
-    
+
     /// <summary>
-    /// Constructor, will be used to set the bearer token and the http client
+    ///     Constructor, will be used to set the bearer token and the http client
     /// </summary>
     /// <param name="bearer">Bearer token, the General API key provided by 20i</param>
     /// <param name="client">Http client</param>
     public TwentyIApi(string bearer, HttpClient client)
     {
         //base64 encode the bearer token
-        _bearer = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(bearer));
+        _bearer = Convert.ToBase64String(Encoding.UTF8.GetBytes(bearer));
         _client = client;
         _requestHandler = new RequestHandler(_client);
     }
-    
+
     #region Domain Related Requests
-    
+
     /// <summary>
-    /// List all possible domains that are supported with the periods that are supported for registration
+    ///     List all possible domains that are supported with the periods that are supported for registration
     /// </summary>
-    /// <see cref="https://api.20i.com/domain-period"/>
+    /// <see cref="https://api.20i.com/domain-period" />
     /// <returns>The raw json response as a string</returns>
     public async Task<string> GetDomainPeriods()
     {
@@ -37,11 +39,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// List all domain extentions with their associated premium group.
+    ///     List all domain extentions with their associated premium group.
     /// </summary>
-    /// <see cref="https://api.20i.com/domainPremiumType"/>
+    /// <see cref="https://api.20i.com/domainPremiumType" />
     /// <returns>The raw json response as a string</returns>
     public async Task<string> GetDomainPremiumTypes()
     {
@@ -49,23 +51,33 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Searches for one or more domain names.
-    /// If you provide a domain name, this will search for that name only, otherwise it will search for that prefix on all supported TLDs.
-    /// You may supply multiple literal domain names if you separate them with commas.
-    /// You may supply arbitrary text, which will be stripped down to something suitable for domain search. This is typically useful with suggestions on.
-    /// Under some circumstances this will attempt a detailed search, which will fetch more specific information about transferrable domains.
-    /// This will happen if you search for one domain name. Domain Suggestions Our primary domain availability provider supports suggesting names based on the search, using simple semantic permutations of the supplied name(s).
-    /// For example if you're searching for mailboxdelivery.com it might suggest post-delivery.com, mailboxsend.net and my-mailbox-delivery.com.
-    /// These are supported only in a small set of TLDs (including .com, .net, .org, .info).
-    /// These names are probably available, and will get properly checked at the end of the results, meaning that you will get two results: one marked "suggestion" and a later one which looks like a direct domain search result.
-    /// At the current time, setting the TLDs to search is not supported. If a domain is returned which you aren't set up to sell, you should exclude it from your view.
-    /// Note on responsiveness and order All results will be output at the earliest possible opportunity, and will be delivered in separate packets with each result hash on a line on its own.
-    /// This means that the order will usually be different to the header order, and the output will look a little different to typical JSON responses.
-    /// Usage limits Access to this service is subject to reasonable usage limits. If you go over the limit, further access will be blocked for up to 24 hours.
+    ///     Searches for one or more domain names.
+    ///     If you provide a domain name, this will search for that name only, otherwise it will search for that prefix on all
+    ///     supported TLDs.
+    ///     You may supply multiple literal domain names if you separate them with commas.
+    ///     You may supply arbitrary text, which will be stripped down to something suitable for domain search. This is
+    ///     typically useful with suggestions on.
+    ///     Under some circumstances this will attempt a detailed search, which will fetch more specific information about
+    ///     transferrable domains.
+    ///     This will happen if you search for one domain name. Domain Suggestions Our primary domain availability provider
+    ///     supports suggesting names based on the search, using simple semantic permutations of the supplied name(s).
+    ///     For example if you're searching for mailboxdelivery.com it might suggest post-delivery.com, mailboxsend.net and
+    ///     my-mailbox-delivery.com.
+    ///     These are supported only in a small set of TLDs (including .com, .net, .org, .info).
+    ///     These names are probably available, and will get properly checked at the end of the results, meaning that you will
+    ///     get two results: one marked "suggestion" and a later one which looks like a direct domain search result.
+    ///     At the current time, setting the TLDs to search is not supported. If a domain is returned which you aren't set up
+    ///     to sell, you should exclude it from your view.
+    ///     Note on responsiveness and order All results will be output at the earliest possible opportunity, and will be
+    ///     delivered in separate packets with each result hash on a line on its own.
+    ///     This means that the order will usually be different to the header order, and the output will look a little
+    ///     different to typical JSON responses.
+    ///     Usage limits Access to this service is subject to reasonable usage limits. If you go over the limit, further access
+    ///     will be blocked for up to 24 hours.
     /// </summary>
-    /// <see cref="https://api.20i.com/domain-search/{query}"/>
+    /// <see cref="https://api.20i.com/domain-search/{query}" />
     /// <param name="query">The query to search for</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> GetDomainSearch(string query)
@@ -74,11 +86,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// RetrieveDomains Returns basic information about the domains in the account.
+    ///     RetrieveDomains Returns basic information about the domains in the account.
     /// </summary>
-    /// <see cref="https://api.20i.com/domain"/>
+    /// <see cref="https://api.20i.com/domain" />
     /// <returns>The raw json response as a string</returns>
     public async Task<string> GetDomains()
     {
@@ -88,13 +100,14 @@ public class TwentyIApi
     }
 
     #endregion
-    
+
     #region Managed Vps Requests
-    
+
     /// <summary>
-    /// Activates or deactivates the service. Possible subservice_name are 'default' for a typical set of services and 'main' for the core service only.
+    ///     Activates or deactivates the service. Possible subservice_name are 'default' for a typical set of services and
+    ///     'main' for the core service only.
     /// </summary>
-    /// <see cref="https://api.20i.com/managed_vps/{id}/userStatus"/>
+    /// <see cref="https://api.20i.com/managed_vps/{id}/userStatus" />
     /// <remarks> Json sample body: { includeRepeated: true, subservices:{ (subservice_name): true } } </remarks>
     /// <param name="id">The id of the managed vps</param>
     /// <param name="body">The json body to send</param>
@@ -104,12 +117,12 @@ public class TwentyIApi
         var url = _baseUrl + "managed_vps/" + id + "/userStatus";
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
-    } 
-    
+    }
+
     /// <summary>
-    /// Add a web site.
+    ///     Add a web site.
     /// </summary>
-    /// <see cref="https://api.20i.com/managed_vps/{id}/addWeb"/>
+    /// <see cref="https://api.20i.com/managed_vps/{id}/addWeb" />
     /// <remarks> Json sample body: { domain_name: "string", extra_domain_names: "string" } </remarks>
     /// <param name="id">The id of the managed vps</param>
     /// <param name="body">The json body to send</param>
@@ -120,11 +133,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Delete web sites.
+    ///     Delete web sites.
     /// </summary>
-    /// <see cref="https://api.20i.com/managed_vps/{id}/deleteWeb"/>
+    /// <see cref="https://api.20i.com/managed_vps/{id}/deleteWeb" />
     /// <remarks> Json sample body: { delete-id: ["string"] } </remarks>
     /// <param name="id">The id of the managed vps</param>
     /// <param name="body">The json body to send</param>
@@ -135,11 +148,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns an object representation of your managed VPS.
+    ///     Returns an object representation of your managed VPS.
     /// </summary>
-    /// <see cref="https://api.20i.com/managed_vps/{id}"/>
+    /// <see cref="https://api.20i.com/managed_vps/{id}" />
     /// <param name="id">The id of the managed vps</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> GetManagedVps(string id)
@@ -148,11 +161,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the count of how many packages can be created on this managed VPS.
+    ///     Returns the count of how many packages can be created on this managed VPS.
     /// </summary>
-    /// <see cref="https://api.20i.com/managed_vps/{id}/packageCount"/>
+    /// <see cref="https://api.20i.com/managed_vps/{id}/packageCount" />
     /// <param name="id">The id of the managed vps</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> GetManagedVpsPackageCount(string id)
@@ -161,11 +174,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns a short, cheap set of info for all managed VPSs.
+    ///     Returns a short, cheap set of info for all managed VPSs.
     /// </summary>
-    /// <see cref="https://api.20i.com/managed_vps"/>
+    /// <see cref="https://api.20i.com/managed_vps" />
     /// <returns>The raw json response as a string</returns>
     public async Task<string> GetManagedVpsList()
     {
@@ -173,11 +186,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the name of one Managed VPS.
+    ///     Returns the name of one Managed VPS.
     /// </summary>
-    /// <see cref="https://api.20i.com/managed_vps/{id}/name"/>
+    /// <see cref="https://api.20i.com/managed_vps/{id}/name" />
     /// <param name="id">The id of the managed vps</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> GetManagedVpsName(string id)
@@ -186,12 +199,12 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set the VPS Name
+    ///     Set the VPS Name
     /// </summary>
-    /// <see cref="https://api.20i.com/managed_vps/{id}/name"/>
-    ///<remarks> Json sample body: { name: "string" } </remarks>
+    /// <see cref="https://api.20i.com/managed_vps/{id}/name" />
+    /// <remarks> Json sample body: { name: "string" } </remarks>
     /// <param name="id">The id of the managed vps</param>
     /// <param name="body">The json body to send</param>
     /// <returns>The raw json response as a string</returns>
@@ -201,14 +214,15 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     #endregion
-    
+
     #region MSSQL Endpoints
+
     /// <summary>
-    /// Retrieve MSSQL Databases
+    ///     Retrieve MSSQL Databases
     /// </summary>
-    /// <see cref="https://api.20i.com/mssql"/>
+    /// <see cref="https://api.20i.com/mssql" />
     /// <returns>The raw json response as a string</returns>
     public async Task<string> GetMssql()
     {
@@ -216,11 +230,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Retrieve MSSQL Database by ID
+    ///     Retrieve MSSQL Database by ID
     /// </summary>
-    /// <see cref="https://api.20i.com/mssql/{id}"/>
+    /// <see cref="https://api.20i.com/mssql/{id}" />
     /// <param name="id">The id of the mssql database</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> GetMssqlById(string id)
@@ -229,11 +243,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Update the config to link the MS SQL product to a package.
+    ///     Update the config to link the MS SQL product to a package.
     /// </summary>
-    /// <see cref="https://api.20i.com/mssql/{id}"/>
+    /// <see cref="https://api.20i.com/mssql/{id}" />
     /// <remarks> Json sample body: { id:1 } </remarks>
     /// <param name="id">The id of the mssql database</param>
     /// <param name="body">The json body to send</param>
@@ -244,15 +258,16 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     #endregion
-    
+
     #region Packages Endpoints
-    
+
     /// <summary>
-    /// Activates or deactivates the service. Possible subservice_name are 'default' for a typical set of services and 'main' for the core service only.
+    ///     Activates or deactivates the service. Possible subservice_name are 'default' for a typical set of services and
+    ///     'main' for the core service only.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/userStatus"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/userStatus" />
     /// <remarks> Json sample body: { includeRepeated: true, subservices:{ (subservice_name): true } } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
@@ -264,11 +279,12 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Activates or deactivates the service. Possible subservice_name are 'default' for a typical set of services and 'main' for the core service only.
+    ///     Activates or deactivates the service. Possible subservice_name are 'default' for a typical set of services and
+    ///     'main' for the core service only.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/userStatus"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/userStatus" />
     /// <remarks> Json sample body: { includeRepeated: true, subservices:{ (subservice_name): true } } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The json body to send</param>
@@ -279,11 +295,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Return a list of installed applications
+    ///     Return a list of installed applications
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/installedApplications"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/installedApplications" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebInstalledApplications(string packageId)
@@ -292,13 +308,18 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Add, remove and update applications and set their environment Currently only one type (add,update,delete,setEnv) is supported per request.
+    ///     Add, remove and update applications and set their environment Currently only one type (add,update,delete,setEnv) is
+    ///     supported per request.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/installedApplications"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/installedApplications" />
     /// <param name="packageId">The id of the package</param>
-    /// <remarks>json sample { add:{ domain: "string", environment: "string", name: "string", path: "string", script: "string", typeCode: "string" }, update:{ domain: "string", environment: "string", name: "string", path: "string", script: "string", typeCode: "string" }, delete:{ id: "string" }, setEnv:{ id: "string", environment: "string" } }</remarks>
+    /// <remarks>
+    ///     json sample { add:{ domain: "string", environment: "string", name: "string", path: "string", script: "string",
+    ///     typeCode: "string" }, update:{ domain: "string", environment: "string", name: "string", path: "string", script:
+    ///     "string", typeCode: "string" }, delete:{ id: "string" }, setEnv:{ id: "string", environment: "string" } }
+    /// </remarks>
     /// <param name="body">The json body to send</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebInstalledApplications(string packageId, string body)
@@ -307,11 +328,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns a list of installed software by type code on managed server.
+    ///     Returns a list of installed software by type code on managed server.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/installedSoftware"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/installedSoftware" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebInstalledSoftware(string packageId)
@@ -320,11 +341,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the current autoresponder config.
+    ///     Returns the current autoresponder config.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/email/{email_id}/responder"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/email/{email_id}/responder" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="emailId">The id of the email</param>
     /// <returns>The raw json response as a string</returns>
@@ -334,11 +355,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the bandwidth stats and hits.
+    ///     Get the bandwidth stats and hits.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/bandwidthStats"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/bandwidthStats" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebBandwidthStats(string packageId)
@@ -347,11 +368,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get blocked countries, in the format of 2-digit ISO codes.
+    ///     Get blocked countries, in the format of 2-digit ISO codes.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/blockedCountries"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/blockedCountries" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebBlockedCountries(string packageId)
@@ -360,11 +381,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set the blocked countries for the site.
+    ///     Set the blocked countries for the site.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/blockedCountries"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/blockedCountries" />
     /// <remarks> sample body: {countries: ["string"] } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -375,11 +396,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get blocked IP addresses either in standard format or in CIDR format.
+    ///     Get blocked IP addresses either in standard format or in CIDR format.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/blockedIpAddresses"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/blockedIpAddresses" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebBlockedIpAddresses(string packageId)
@@ -388,11 +409,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set the blocked IP addresses for the web|package. This is an array of IP addresses, with an optional CIDR range.
+    ///     Set the blocked IP addresses for the web|package. This is an array of IP addresses, with an optional CIDR range.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/blockedIpAddresses"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/blockedIpAddresses" />
     /// <remarks> sample body: { ip_addresses: ["string"] } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -403,11 +424,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the CDN statistics for the package.
+    ///     Returns the CDN statistics for the package.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/cdnStats"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/cdnStats" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebCdnStats(string packageId)
@@ -416,11 +437,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Shows bandwidth and hits split by country as recorded by our edge CDN platform
+    ///     Shows bandwidth and hits split by country as recorded by our edge CDN platform
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/cdnStatsTrafficDistribution"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/cdnStatsTrafficDistribution" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebCdnStatsTrafficDistribution(string packageId)
@@ -429,11 +450,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the current contacts for the domain name. This is a map of contact types to contact data, in EPP format.
+    ///     Returns the current contacts for the domain name. This is a map of contact types to contact data, in EPP format.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/contacts"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/contacts" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -443,11 +464,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Sets the contacts for the domain. This is a map of contact types to contact data, in EPP format.
+    ///     Sets the contacts for the domain. This is a map of contact types to contact data, in EPP format.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/contacts"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/contacts" />
     /// <remarks> sample body: { contacts: { "string": "string" } } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
@@ -459,11 +480,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns some information about the database.
+    ///     Returns some information about the database.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/database/{database_id}"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/database/{database_id}" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="databaseId">The id of the database</param>
     /// <returns>The raw json response as a string</returns>
@@ -473,11 +494,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Retrieve directory listing configuration.
+    ///     Retrieve directory listing configuration.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/directoryIndex"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/directoryIndex" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebDirectoryIndex(string packageId)
@@ -486,11 +507,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set up to 5 files for the directory index in the htaccess.
+    ///     Set up to 5 files for the directory index in the htaccess.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/directoryIndex"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/directoryIndex" />
     /// <remarks> sample body: { directoryIndex: ["string"] }</remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -501,11 +522,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the directory indexing state
+    ///     Get the directory indexing state
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/directoryIndexing"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/directoryIndexing" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebDirectoryIndexing(string packageId)
@@ -514,11 +535,12 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Directory indexing allows visitors to view a list of files instead of the actual webpage. This can turn on/off directory indexing for the website
+    ///     Directory indexing allows visitors to view a list of files instead of the actual webpage. This can turn on/off
+    ///     directory indexing for the website
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/directoryIndexing"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/directoryIndexing" />
     /// <remarks> sample body: { value: true }</remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -529,11 +551,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Request Disk Usage Report
+    ///     Request Disk Usage Report
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/requestDiskUsage"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/requestDiskUsage" />
     /// <remarks> sample body: { subdirectory: "string" }</remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -544,11 +566,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns domain DKIM Signatures.
+    ///     Returns domain DKIM Signatures.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/email/{email_id}/signature"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/email/{email_id}/signature" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="emailId">The id of the email</param>
     /// <returns>The raw json response as a string</returns>
@@ -558,12 +580,16 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set or Delete DKIM Signature for a given domain.
+    ///     Set or Delete DKIM Signature for a given domain.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/email/{email_id}/signature"/>
-    /// <remarks> sample body: { action: "string", body:{ Canonicalization: "string", ExpiryTime: 1, Flag: "string", Granularity: "string", IsDefault: true, IsStrict: true, Note: "string", Selector: "string", ServiceType: "string" } }</remarks>
+    /// <see cref="https://api.20i.com/package/{package_id}/email/{email_id}/signature" />
+    /// <remarks>
+    ///     sample body: { action: "string", body:{ Canonicalization: "string", ExpiryTime: 1, Flag: "string",
+    ///     Granularity: "string", IsDefault: true, IsStrict: true, Note: "string", Selector: "string", ServiceType: "string" }
+    ///     }
+    /// </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="emailId">The id of the email</param>
     /// <param name="body">The body of the request</param>
@@ -574,11 +600,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the maximum number of nameservers for the domain. You can and should cache this information by TLD.
+    ///     Returns the maximum number of nameservers for the domain. You can and should cache this information by TLD.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/maxNameservers"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/maxNameservers" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -588,11 +614,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the default DNS records from the web object.
+    ///     Returns the default DNS records from the web object.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/defaultDns"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/defaultDns" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageDefaultDns(string packageId)
@@ -601,12 +627,13 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the records needed for a full Google Apps service, including mail and web services.
-    /// You can send these back in the "new" key when updating DNS to add them, but it's recommended that you also delete any conflicting records at the same time.
+    ///     Returns the records needed for a full Google Apps service, including mail and web services.
+    ///     You can send these back in the "new" key when updating DNS to add them, but it's recommended that you also delete
+    ///     any conflicting records at the same time.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/dns/googleApps"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/dns/googleApps" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -616,11 +643,12 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Equivalent to adding new DNS records with all the results of GET "googleApps". This will not remove any records by default.
+    ///     Equivalent to adding new DNS records with all the results of GET "googleApps". This will not remove any records by
+    ///     default.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/dns/googleApps"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/dns/googleApps" />
     /// <remarks> sample body: { conflictPolicy: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
@@ -632,12 +660,13 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the records needed for Google Mail service.
-    /// You can send these back in the "new" key when updating DNS to add them, but it's recommended that you also delete any conflicting records at the same time.
+    ///     Returns the records needed for Google Mail service.
+    ///     You can send these back in the "new" key when updating DNS to add them, but it's recommended that you also delete
+    ///     any conflicting records at the same time.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/dns/googleAppsMailOnly"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/dns/googleAppsMailOnly" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -647,11 +676,12 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Equivalent to adding new DNS records with all the results of GET "googleAppsMailOnly". This will not remove any records by default.
+    ///     Equivalent to adding new DNS records with all the results of GET "googleAppsMailOnly". This will not remove any
+    ///     records by default.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/dns/googleAppsMailOnly"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/dns/googleAppsMailOnly" />
     /// <remarks> sample body: { conflictPolicy: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
@@ -663,11 +693,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the current nameservers for the domain, if applicable.
+    ///     Returns the current nameservers for the domain, if applicable.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/nameservers"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/nameservers" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -677,13 +707,14 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Updates the nameservers for the domain.
-    /// If the old nameservers do not match, the registry may reject the request.
-    /// Some registries may handle names which are present in both "ns" and "old-ns" incorrectly, so it's recommended that you do not include names which are being kept.
+    ///     Updates the nameservers for the domain.
+    ///     If the old nameservers do not match, the registry may reject the request.
+    ///     Some registries may handle names which are present in both "ns" and "old-ns" incorrectly, so it's recommended that
+    ///     you do not include names which are being kept.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/nameservers"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/nameservers" />
     /// <remarks> sample body: { ns: ["string"], old-ns: ["string"] }</remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
@@ -695,11 +726,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the records needed for office 365 mail.
+    ///     Returns the records needed for office 365 mail.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/dns/office365Mail"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/dns/office365Mail" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -709,11 +740,12 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Equivalent to adding new DNS records with all the results of GET "Office365MailOnly". This will not remove any records by default.
+    ///     Equivalent to adding new DNS records with all the results of GET "Office365MailOnly". This will not remove any
+    ///     records by default.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/dns/office365MailOnly"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/dns/office365MailOnly" />
     /// <remarks> sample body: { conflictPolicy:"string" }</remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
@@ -725,11 +757,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the current DNS records for the domain.
+    ///     Returns the current DNS records for the domain.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/dns"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/dns" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -739,21 +771,34 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Updates the DNS records for the domain, if the DNS service is in use.
-    /// Name prefixes are either plain names like "www" or "mail", or "@" to indicate that it applies to the domain itself (typically only AAAA, A or MX).
-    /// NOTE: The platform may silently rewrite some adds into updates.
-    /// NOTE: CNAMEs are special records (see RFC1034, with reference to RFC1912): they actually mean "no stop you're looking in the wrong place, ask instead for ".
-    /// Thus on any name you can only have one of: (a)no records, (b) 1 CNAME, or (c) 1+ non-CNAME records (including SOA and NS).
-    /// If you have a CNAME on a name and want to add records on that name, you should remove the CNAME (this may be done implicitly for you).
-    /// If you have non-CNAME records on a name and want to add a CNAME on that name, you will have to delete every non-CNAME record on the name.
-    /// In most cases, people using CNAME actually want "A/AAAA CNAME", ie. aliasing the A and AAAA records but nothing else (which the DNS protocol doesn't support).
-    /// The distinction doesn't affect anything unless you have conflicting records on the same name, which usually is only the case for the root.
-    /// Since browsers do not support _http._tcp SRV records (and don't intend to), you simply have to manually copy A or AAAA records in this case.
+    ///     Updates the DNS records for the domain, if the DNS service is in use.
+    ///     Name prefixes are either plain names like "www" or "mail", or "@" to indicate that it applies to the domain itself
+    ///     (typically only AAAA, A or MX).
+    ///     NOTE: The platform may silently rewrite some adds into updates.
+    ///     NOTE: CNAMEs are special records (see RFC1034, with reference to RFC1912): they actually mean "no stop you're
+    ///     looking in the wrong place, ask instead for ".
+    ///     Thus on any name you can only have one of: (a)no records, (b) 1 CNAME, or (c) 1+ non-CNAME records (including SOA
+    ///     and NS).
+    ///     If you have a CNAME on a name and want to add records on that name, you should remove the CNAME (this may be done
+    ///     implicitly for you).
+    ///     If you have non-CNAME records on a name and want to add a CNAME on that name, you will have to delete every
+    ///     non-CNAME record on the name.
+    ///     In most cases, people using CNAME actually want "A/AAAA CNAME", ie. aliasing the A and AAAA records but nothing
+    ///     else (which the DNS protocol doesn't support).
+    ///     The distinction doesn't affect anything unless you have conflicting records on the same name, which usually is only
+    ///     the case for the root.
+    ///     Since browsers do not support _http._tcp SRV records (and don't intend to), you simply have to manually copy A or
+    ///     AAAA records in this case.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/dns"/>
-    /// <remarks>{ conflictPolicy: "string", insertPolicy: "string", new:{ AAAA:{ host: "string", ipv6: "string", }, A:{ host: "string", ip: "string", }, CNAME:{ reuseId: "string", host: "string", target: "string", }, MX:{ host: "string", target: "string", pri: "string", }, TXT:{ host: "string", txt: "string", }, SRV:{ host: "string", pri: "string", weight: "string", port: "string", target: "string", } }, delete: ["string"] }</remarks>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/dns" />
+    /// <remarks>
+    ///     { conflictPolicy: "string", insertPolicy: "string", new:{ AAAA:{ host: "string", ipv6: "string", }, A:{ host:
+    ///     "string", ip: "string", }, CNAME:{ reuseId: "string", host: "string", target: "string", }, MX:{ host: "string",
+    ///     target: "string", pri: "string", }, TXT:{ host: "string", txt: "string", }, SRV:{ host: "string", pri: "string",
+    ///     weight: "string", port: "string", target: "string", } }, delete: ["string"] }
+    /// </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <param name="body">The body of the request</param>
@@ -764,11 +809,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns a map of DNS names to document root subpaths for the site.
+    ///     Returns a map of DNS names to document root subpaths for the site.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/documentRoots"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/documentRoots" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebDocumentRoots(string packageId)
@@ -777,11 +822,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns information about the domain.
+    ///     Returns information about the domain.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -791,11 +836,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Will provide a hint on what the current maximum years would be allowed for a renewal
+    ///     Will provide a hint on what the current maximum years would be allowed for a renewal
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/renewalMultipleMaxHintFor"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/renewalMultipleMaxHintFor" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -805,11 +850,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the names for this package.
+    ///     Returns the names for this package.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/names"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/names" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageNames(string packageId)
@@ -818,13 +863,14 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Add or remove names from the package.
-    /// This has special behaviour if any of the names are also registered (renewable) domain names in your account:
-    /// As a policy matter, you may not remove the last name from the object. If you attempt to do so, you will get an error.
+    ///     Add or remove names from the package.
+    ///     This has special behaviour if any of the names are also registered (renewable) domain names in your account:
+    ///     As a policy matter, you may not remove the last name from the object. If you attempt to do so, you will get an
+    ///     error.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/names"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/names" />
     /// <remarks> sample body: { add: ["string"], rem: ["string"], chg: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -835,11 +881,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get details about a given domain, ie is this a domain or subdomain.
+    ///     Get details about a given domain, ie is this a domain or subdomain.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/domainCheck"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/domainCheck" />
     /// <remarks> sample body: { domain: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -850,11 +896,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Add or remove names from the Web. This is mostly handled on the corresponding Package.
+    ///     Add or remove names from the Web. This is mostly handled on the corresponding Package.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/names"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/names" />
     /// <remarks> sample body: { add: ["string"], rem: ["string"], chg: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -865,12 +911,13 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get a per-year price, if premium, specifically for renewals.
-    /// This is always in GBP; it will require currency conversion for other currencies and may or may not have markup added for checkout.
+    ///     Get a per-year price, if premium, specifically for renewals.
+    ///     This is always in GBP; it will require currency conversion for other currencies and may or may not have markup
+    ///     added for checkout.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/servicePrice"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/servicePrice" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -880,11 +927,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns information about the service domain privacy.
+    ///     Returns information about the service domain privacy.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/privacy"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/privacy" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -894,11 +941,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Update the privacy settings for the service domain.
+    ///     Update the privacy settings for the service domain.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/privacy"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/privacy" />
     /// <remarks> sample body: { emailDestination: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
@@ -910,11 +957,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Updates the privacy enabled/disabled state (for domains with privacy attached only).
+    ///     Updates the privacy enabled/disabled state (for domains with privacy attached only).
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/privacyState"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/privacyState" />
     /// <remarks> sample body: { enabled: true } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
@@ -926,11 +973,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the current cached status of the transfer.
+    ///     Returns the current cached status of the transfer.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/pendingTransferStatus"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/pendingTransferStatus" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -940,11 +987,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Fetches information about WHOIS contact disclosure (Nominet or .IT) for the domain name.
+    ///     Fetches information about WHOIS contact disclosure (Nominet or .IT) for the domain name.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/optOut"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/optOut" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -954,11 +1001,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Updates the WHOIS disclosure options, for applicable domains.
+    ///     Updates the WHOIS disclosure options, for applicable domains.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/optOut"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/optOut" />
     /// <remarks> sample body: { enabled: true } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
@@ -970,11 +1017,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the current blacklist config - email.
+    ///     Returns the current blacklist config - email.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}/spamPolicyListBlacklist"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}/spamPolicyListBlacklist" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
     /// <returns>The raw json response as a string</returns>
@@ -984,27 +1031,28 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the current email configuration for the domain.
-    /// This is a map of setting types to arrays of settings, in the same format as the "email" method but with an extra "id" property on each item.
-    /// To facilitate page display, this also redundantly includes the domain name in a "name" property.
+    ///     Returns the current email configuration for the domain.
+    ///     This is a map of setting types to arrays of settings, in the same format as the "email" method but with an extra
+    ///     "id" property on each item.
+    ///     To facilitate page display, this also redundantly includes the domain name in a "name" property.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
     /// <returns>The raw json response as a string</returns>
-       public async Task<string> PackageEmail(string packageId, string mailId)
+    public async Task<string> PackageEmail(string packageId, string mailId)
     {
         var url = _baseUrl + "package/" + packageId + "/email/" + mailId;
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Updates the email configuration for the domain.
+    ///     Updates the email configuration for the domain.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}" />
     /// <remarks> sample body:{ { result:{ }, name: "string" } }</remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
@@ -1016,11 +1064,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the current domain config.
+    ///     Returns the current domain config.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}/domain"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}/domain" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
     /// <returns>The raw json response as a string</returns>
@@ -1030,11 +1078,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the current domain alias config.
+    ///     Returns the current domain alias config.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}/domainAlias"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}/domainAlias" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
     /// <returns>The raw json response as a string</returns>
@@ -1044,11 +1092,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the current forwarder config.
+    ///     Returns the current forwarder config.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}/forwarder"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}/forwarder" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
     /// <returns>The raw json response as a string</returns>
@@ -1058,11 +1106,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Fetches all forwarders by package id.
+    ///     Fetches all forwarders by package id.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/email/allMailForwarders"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/email/allMailForwarders" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageEmailAllMailForwarders(string packageId)
@@ -1071,11 +1119,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the current whitelist config.
+    ///     Returns the current whitelist config.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}/spamPolicyListWhitelist"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}/spamPolicyListWhitelist" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
     /// <returns>The raw json response as a string</returns>
@@ -1085,11 +1133,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the file permissions that do not match the platform recommendations
+    ///     Get the file permissions that do not match the platform recommendations
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/filePermissions"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/filePermissions" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebFilePermissions(string packageId)
@@ -1098,11 +1146,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set file permissions
+    ///     Set file permissions
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/filePermissions"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/filePermissions" />
     /// <remarks> sample body: { permissionCheckId: 1, files:{ file: "string", perms: 1 } } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -1113,11 +1161,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the current mailbox forwarder config.
+    ///     Returns the current mailbox forwarder config.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}/mailForwarder"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}/mailForwarder" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
     /// <returns>The raw json response as a string</returns>
@@ -1127,11 +1175,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the FTP credentials (if any).
+    ///     Returns the FTP credentials (if any).
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/ftpCredentials"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/ftpCredentials" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebFtpCredentials(string packageId)
@@ -1140,11 +1188,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns an array of FTP users for this ExternalId and the Acl associated with the FTP account
+    ///     Returns an array of FTP users for this ExternalId and the Acl associated with the FTP account
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/ftpUsers"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/ftpUsers" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebFtpUsers(string packageId)
@@ -1153,12 +1201,17 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Update or create a new FTP user. This method will handle the creation of new FTP users and updating existing FTP users.
+    ///     Update or create a new FTP user. This method will handle the creation of new FTP users and updating existing FTP
+    ///     users.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/ftpUsers"/>
-    /// <remarks> sample body: { new:{ ftp:{ user:{ Username: "string", Domain: "string", Password: "string", JailFrom: "string" } } }, update:{ ftp:{ id: "string", user:{ Password: "string", JailFrom: "string", UnlockedUntil: "string", Enabled: true }, acl: "string" } }, delete:{ ftp:{ id: ["string"] } } } </remarks>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/ftpUsers" />
+    /// <remarks>
+    ///     sample body: { new:{ ftp:{ user:{ Username: "string", Domain: "string", Password: "string", JailFrom:
+    ///     "string" } } }, update:{ ftp:{ id: "string", user:{ Password: "string", JailFrom: "string", UnlockedUntil:
+    ///     "string", Enabled: true }, acl: "string" } }, delete:{ ftp:{ id: ["string"] } } }
+    /// </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
@@ -1168,11 +1221,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the home directory for the web site.
+    ///     Returns the home directory for the web site.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/homeDirectory"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/homeDirectory" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebHomeDirectory(string packageId)
@@ -1181,11 +1234,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the prevent hotlinking config.
+    ///     Get the prevent hotlinking config.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/preventHotlinking"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/preventHotlinking" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebPreventHotlinking(string packageId)
@@ -1194,12 +1247,15 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set the prevent hotlinking config.
+    ///     Set the prevent hotlinking config.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/preventHotlinking"/>
-    /// <remarks> sample body: { AllowDirect: true, AllowedHostnames: ["string"], RedirectURL: "string", Extensions: ["string"] } </remarks>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/preventHotlinking" />
+    /// <remarks>
+    ///     sample body: { AllowDirect: true, AllowedHostnames: ["string"], RedirectURL: "string", Extensions: ["string"]
+    ///     }
+    /// </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
@@ -1209,11 +1265,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the limits for the current user, a key-value map.
+    ///     Returns the limits for the current user, a key-value map.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/limits"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/limits" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -1223,11 +1279,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the limits for the current user, a key-value map.
+    ///     Returns the limits for the current user, a key-value map.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/limits"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/limits" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageLimits(string packageId)
@@ -1236,11 +1292,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Retrieve limits for a web.
+    ///     Retrieve limits for a web.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/limits"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/limits" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebLimits(string packageId)
@@ -1249,11 +1305,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns some information about the database user
+    ///     Returns some information about the database user
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/database/{database_id}/user/{user_id}"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/database/{database_id}/user/{user_id}" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="databaseId">The id of the database</param>
     /// <param name="userId">The id of the user</param>
@@ -1264,11 +1320,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns information about this service.
+    ///     Returns information about this service.
     /// </summary>
-    /// <see cref="https://api.20i.com/package"/>
+    /// <see cref="https://api.20i.com/package" />
     /// <returns>The raw json response as a string</returns>
     public async Task<string> Package()
     {
@@ -1276,11 +1332,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Retrieve stack user list.
+    ///     Retrieve stack user list.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/stackUserList"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/stackUserList" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageStackUserList(string packageId)
@@ -1289,11 +1345,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get access and error logs for the site.
+    ///     Get access and error logs for the site.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/logs"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/logs" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebLogs(string packageId)
@@ -1302,11 +1358,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the current mailbox config.
+    ///     Returns the current mailbox config.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}/mailbox"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}/mailbox" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
     /// <returns>The raw json response as a string</returns>
@@ -1316,11 +1372,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get maintenance mode settings for this web.
+    ///     Get maintenance mode settings for this web.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/maintenanceMode"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/maintenanceMode" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebMaintenanceMode(string packageId)
@@ -1329,11 +1385,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set maintenance mode settings for this web.
+    ///     Set maintenance mode settings for this web.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/maintenanceMode"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/maintenanceMode" />
     /// <remarks> sample body: {"enabled":true} </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1344,11 +1400,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the latest malware report for a given website
+    ///     Returns the latest malware report for a given website
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/malwareReport"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/malwareReport" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebMalwareReport(string packageId)
@@ -1357,11 +1413,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the malware scan objects for this web
+    ///     Get the malware scan objects for this web
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/malwareScan"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/malwareScan" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebMalwareScan(string packageId)
@@ -1370,11 +1426,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set Mailware Scan lock state, setting to "new" will request a new scan
+    ///     Set Mailware Scan lock state, setting to "new" will request a new scan
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/malwareScan"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/malwareScan" />
     /// <remarks> sample body: {"LockState":"new"} </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1385,11 +1441,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Add a user to an MSSQL database.
+    ///     Add a user to an MSSQL database.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/mssqlUsers"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/mssqlUsers" />
     /// <remarks> sample body: { databaseId: 1, username: "string", password: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1400,11 +1456,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get MSSQL Databases.
+    ///     Get MSSQL Databases.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/mssqlDatabases"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/mssqlDatabases" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebMssqlDatabases(string packageId)
@@ -1413,11 +1469,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Create a new MSSQL Database and a user with the same name.
+    ///     Create a new MSSQL Database and a user with the same name.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/mssqlDatabases"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/mssqlDatabases" />
     /// <remarks> sample body: { name: "string",password: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1428,11 +1484,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Remove an MSSQL database.
+    ///     Remove an MSSQL database.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/removeMssqlDatabase"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/removeMssqlDatabase" />
     /// <remarks> sample body: { id: 1 } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1443,11 +1499,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Remove an MSSQL user.
+    ///     Remove an MSSQL user.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/removeMssqlUser"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/removeMssqlUser" />
     /// <remarks> sample body: { databaseId: 1, userId: 1 } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1458,11 +1514,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Update the password for an MSSQL user.
+    ///     Update the password for an MSSQL user.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/mssqlUserPassword"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/mssqlUserPassword" />
     /// <remarks> sample body: { databaseId: 1, userId: 1, password: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1473,11 +1529,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get all MySQL databases.
+    ///     Get all MySQL databases.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlDatabases"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlDatabases" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebMysqlDatabases(string packageId)
@@ -1486,11 +1542,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Create a MySQL database.
+    ///     Create a MySQL database.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlDatabases"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlDatabases" />
     /// <remarks> sample body: { name: "string", password: "string", allow_random: true } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1501,11 +1557,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the external IP addresses that MySQL users are allowed to connect to remotely.
+    ///     Get the external IP addresses that MySQL users are allowed to connect to remotely.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlUserIpAcl"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlUserIpAcl" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebMysqlUserIpAcl(string packageId)
@@ -1514,11 +1570,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Update the external IP addresses that MySQL users are allowed to connect to remotely.
+    ///     Update the external IP addresses that MySQL users are allowed to connect to remotely.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlUserIpAcl"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlUserIpAcl" />
     /// <remarks> sample body: { add:{ user_id: 1, hosts: "string" }, remove:{ user_id: 1, id: 1 } }</remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1529,11 +1585,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Remove a MySQL database.
+    ///     Remove a MySQL database.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/removeMysqlDatabase"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/removeMysqlDatabase" />
     /// <remarks> sample body: { id: 1 }</remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1544,11 +1600,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Remove a MySQL user.
+    ///     Remove a MySQL user.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/removeMysqlUser"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/removeMysqlUser" />
     /// <remarks> sample body: { id: 1 }</remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1559,11 +1615,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get a list of each MySQL database server and a Single Sign on link for each.
+    ///     Get a list of each MySQL database server and a Single Sign on link for each.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlSSO"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlSSO" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebMysqlSso(string packageId)
@@ -1572,11 +1628,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Grant an existing user the default privileges on a database.
+    ///     Grant an existing user the default privileges on a database.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlGrantUserDatabase"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlGrantUserDatabase" />
     /// <remarks> sample body: { username: "string", database: "string" }</remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1587,11 +1643,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the grants for MySQL users and databases.
+    ///     Get the grants for MySQL users and databases.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlGrants"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlGrants" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebMysqlGrants(string packageId)
@@ -1600,11 +1656,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Update the grants for MySQL users and databases.
+    ///     Update the grants for MySQL users and databases.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlGrants"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlGrants" />
     /// <remarks> sample body: { user_id: "string", username: "string", database: "string", grants: ["string"] }</remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1615,11 +1671,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Update a MySQL user's password.
+    ///     Update a MySQL user's password.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlUserPassword"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlUserPassword" />
     /// <remarks> sample body: { user_id: 1, password: "string" }</remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1630,12 +1686,12 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
-    
+
+
     /// <summary>
-    /// Get all mysql users.
+    ///     Get all mysql users.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlUsers"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlUsers" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebMysqlUsers(string packageId)
@@ -1644,11 +1700,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Create a new mysql user.
+    ///     Create a new mysql user.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlUsers"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlUsers" />
     /// <remarks> sample body: { username: "string", password: "string", database: "string" }</remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1659,11 +1715,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns an array for One Click objects that contain details of the current version and details in use
+    ///     Returns an array for One Click objects that contain details of the current version and details in use
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/oneclick"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/oneclick" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebOneclick(string packageId)
@@ -1672,12 +1728,15 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Install a One Click package.
+    ///     Install a One Click package.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/oneclick"/>
-    /// <remarks> sample body: { domain: "string", httpsDomain: "string", oneclick: "string", directory: "string", licenceKey: "string" } </remarks>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/oneclick" />
+    /// <remarks>
+    ///     sample body: { domain: "string", httpsDomain: "string", oneclick: "string", directory: "string", licenceKey:
+    ///     "string" }
+    /// </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
@@ -1687,11 +1746,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns detailed information about the package.
+    ///     Returns detailed information about the package.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWeb(string packageId)
@@ -1700,11 +1759,12 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns an array representation of the package.
+    ///     Returns an array representation of the package.
     /// </summary>
     /// <see cref="https://api.20i.com/package/{package_id}/>
+    /// 
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> Package(string packageId)
@@ -1713,11 +1773,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the limits set of this package bundle type.
+    ///     Returns the limits set of this package bundle type.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/bundleType/limits"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/bundleType/limits" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageBundleTypeLimits(string packageId)
@@ -1726,11 +1786,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the password protected directories.
+    ///     Get the password protected directories.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/passwordProtection"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/passwordProtection" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebPasswordProtection(string packageId)
@@ -1739,11 +1799,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set the password protected directories
+    ///     Set the password protected directories
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/passwordProtection"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/passwordProtection" />
     /// <remarks> sample body: { directories:{ directory: "string", username: "string", password: "string" } } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1754,11 +1814,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get all available PHP versions.
+    ///     Get all available PHP versions.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/availablePhpVersions"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/availablePhpVersions" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebAvailablePhpVersions(string packageId)
@@ -1767,11 +1827,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the PHP config for a name.
+    ///     Returns the PHP config for a name.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/phpConfig/{phpconfig_id}"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/phpConfig/{phpconfig_id}" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="phpConfigId">The id of the php config</param>
     /// <returns>The raw json response as a string</returns>
@@ -1781,11 +1841,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get allowed PHP configuration directives.
+    ///     Get allowed PHP configuration directives.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/allowedPhpConfiguration"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/allowedPhpConfiguration" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebAllowedPhpConfiguration(string packageId)
@@ -1794,11 +1854,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Update the PHP configuration for a name.
+    ///     Update the PHP configuration for a name.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/phpConfig/{phpconfig_id}/updateConfig"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/phpConfig/{phpconfig_id}/updateConfig" />
     /// <remarks> sample body: { config:{ (key): "string" } } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="phpConfigId">The id of the php config</param>
@@ -1810,11 +1870,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the PHP version for the site.
+    ///     Get the PHP version for the site.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/phpVersion"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/phpVersion" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebPhpVersion(string packageId)
@@ -1823,11 +1883,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set the PHP version for the site.
+    ///     Set the PHP version for the site.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/phpVersion"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/phpVersion" />
     /// <remarks> sample body: { value:"string"} </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1838,11 +1898,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns a list of redirects for the site.
+    ///     Returns a list of redirects for the site.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/redirects"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/redirects" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebRedirects(string packageId)
@@ -1851,11 +1911,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set the website redirects.
+    ///     Set the website redirects.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/redirects"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/redirects" />
     /// <remarks> sample body:{ redirects:{ domain: "string", from: "string", to: "string", type: "string" } }</remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1866,13 +1926,13 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the expiry date at the registry.
-    /// This does not necessarily indicate the payment status of the domain nor does it reflect when renewal will occur.
-    /// It is possible for this to return null, eg. for an incomplete transfer or a deleted domain.
+    ///     Returns the expiry date at the registry.
+    ///     This does not necessarily indicate the payment status of the domain nor does it reflect when renewal will occur.
+    ///     It is possible for this to return null, eg. for an incomplete transfer or a deleted domain.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/upstreamExpiryDate"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/upstreamExpiryDate" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -1882,11 +1942,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Restore a backup file which has been uploaded via FTP
+    ///     Restore a backup file which has been uploaded via FTP
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/restoreWebsiteBackup"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/restoreWebsiteBackup" />
     /// <remarks> sample body: { filename: "string", restore_type: "string", restore_databases: true }</remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1897,11 +1957,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns an array of currently configured cron tasks.
+    ///     Returns an array of currently configured cron tasks.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/tasks"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/tasks" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebTasks(string packageId)
@@ -1910,12 +1970,16 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Update, create or delete cron task.
+    ///     Update, create or delete cron task.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/tasks"/>
-    /// <remarks> sample body: { new:{ task:{ Enabled: true, MailTo: "string", TimeSpec: "string", Command: "string" } }, delete:{ task:{ id: ["string"] } }, update:{ task:{ id: "string", Enabled: true, MailTo: "string", TimeSpec: "string", Command: "string" } } } </remarks>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/tasks" />
+    /// <remarks>
+    ///     sample body: { new:{ task:{ Enabled: true, MailTo: "string", TimeSpec: "string", Command: "string" } },
+    ///     delete:{ task:{ id: ["string"] } }, update:{ task:{ id: "string", Enabled: true, MailTo: "string", TimeSpec:
+    ///     "string", Command: "string" } } }
+    /// </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
@@ -1925,11 +1989,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Test a cron task.
+    ///     Test a cron task.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/testCronTask"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/testCronTask" />
     /// <remarks> sample body: { task:"string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -1940,11 +2004,12 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the limits for the session. If the user is a super user then they are exempt from explicit limit restrictions.
+    ///     Returns the limits for the session. If the user is a super user then they are exempt from explicit limit
+    ///     restrictions.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/sessionlimits"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/sessionlimits" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -1954,11 +2019,12 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the limits for the session. If the user is a super user then they are exempt from explicit limit restrictions.
+    ///     Returns the limits for the session. If the user is a super user then they are exempt from explicit limit
+    ///     restrictions.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/sessionlimits"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/sessionlimits" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageSessionlimits(string packageId)
@@ -1967,11 +2033,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Add or Remove a label for this domain
+    ///     Add or Remove a label for this domain
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/labels"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/labels" />
     /// <remarks> sample body: { label: "string", type: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
@@ -1983,11 +2049,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the sitemap jobs, only returls a single jobs (last returned from platform)
+    ///     Get the sitemap jobs, only returls a single jobs (last returned from platform)
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/sitemap"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/sitemap" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebSitemap(string packageId)
@@ -1996,11 +2062,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Start a sitemap job.
+    ///     Start a sitemap job.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/sitemap"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/sitemap" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     /// <remarks> sample body: { } </remarks>
@@ -2010,12 +2076,12 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, "{}", _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Re-install from platform. This will re-install software in the hosting space.
-    /// EG wordpress package types will re-install wordpress
+    ///     Re-install from platform. This will re-install software in the hosting space.
+    ///     EG wordpress package types will re-install wordpress
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/reinstall"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/reinstall" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebReinstall(string packageId)
@@ -2024,11 +2090,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, "{}", _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set ssh authenticator status. 
+    ///     Set ssh authenticator status.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/sshauthenticator"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/sshauthenticator" />
     /// <remarks> sample body: { status:"string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -2039,11 +2105,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get a list of SSH keys for this package.
+    ///     Get a list of SSH keys for this package.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/sshkeys"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/sshkeys" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebSshKeys(string packageId)
@@ -2052,11 +2118,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Update or add new SSH keys.
+    ///     Update or add new SSH keys.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/sshkeys"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/sshkeys" />
     /// <remarks> sample body: { add:{ key: "string", handle: "string" }, delete: ["string"] } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -2067,11 +2133,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the SSH password for this package.
+    ///     Get the SSH password for this package.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/sshpassword"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/sshpassword" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebSshPassword(string packageId)
@@ -2080,11 +2146,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set the SSH password for this package.
+    ///     Set the SSH password for this package.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/sshpassword"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/sshpassword" />
     /// <remarks> sample body: { password: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -2095,12 +2161,12 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// This will toggle the free SSL for a web name.
-    /// The lower level platform handles nameserver checks.
+    ///     This will toggle the free SSL for a web name.
+    ///     The lower level platform handles nameserver checks.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/freeSSL"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/freeSSL" />
     /// <remarks> sample body: { name: "string", enabled: true } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -2111,12 +2177,12 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Gets an array of all the certificates attached to virtual hosts on this web.
-    /// Both free and external SSLs will be retreived.
+    ///     Gets an array of all the certificates attached to virtual hosts on this web.
+    ///     Both free and external SSLs will be retreived.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/certificates"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/certificates" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebCertificates(string packageId)
@@ -2125,11 +2191,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Remove or update certificates from the Web. Currently only remove is supported.
+    ///     Remove or update certificates from the Web. Currently only remove is supported.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/certificates"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/certificates" />
     /// <remarks> sample body: { delete: ["string"] } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -2140,11 +2206,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns whether the site has forced SSL.
+    ///     Returns whether the site has forced SSL.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/forceSSL"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/forceSSL" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebForceSsl(string packageId)
@@ -2153,11 +2219,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Sets the Force SSL flag for a site.
+    ///     Sets the Force SSL flag for a site.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/forceSSL"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/forceSSL" />
     /// <remarks> sample body: { value: true } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -2168,11 +2234,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Install an external SSL certificate.
+    ///     Install an external SSL certificate.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/externalSSL"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/externalSSL" />
     /// <remarks> sample body: { name: "string", certificate: "string", key: "string", ca: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -2183,11 +2249,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get stack cache settings
+    ///     Get stack cache settings
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/stackCache"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/stackCache" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebStackCache(string packageId)
@@ -2196,11 +2262,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Create or update stack cache settings
+    ///     Create or update stack cache settings
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/stackCache"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/stackCache" />
     /// <remarks> sample body: { css: "string", images: "string", javascript: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -2211,11 +2277,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the list of subdomain names mapped to their document roots.
+    ///     Returns the list of subdomain names mapped to their document roots.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/subdomains"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/subdomains" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebSubdomains(string packageId)
@@ -2224,11 +2290,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// This does the same as POSTing to /names except that it enforces the subdomain limit and disallows non-subdomains.
+    ///     This does the same as POSTing to /names except that it enforces the subdomain limit and disallows non-subdomains.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/subdomains"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/subdomains" />
     /// <remarks> sample body: { add: ["string"], rem: ["string"] } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
@@ -2239,11 +2305,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, body, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Cancel an incoming transfer. If successful, this will also refund to balance.
+    ///     Cancel an incoming transfer. If successful, this will also refund to balance.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/cancelTransfer"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/cancelTransfer" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -2253,13 +2319,13 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, null, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Change the IPS-tag for a domain.
-    /// Applicable to UK domains only.
-    /// If this operation succeeds, the domain will no longer be controllable.
+    ///     Change the IPS-tag for a domain.
+    ///     Applicable to UK domains only.
+    ///     If this operation succeeds, the domain will no longer be controllable.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/tag"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/tag" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <remarks> body: {new-tag:"string"} </remarks>
@@ -2270,13 +2336,13 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, null, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the domain's EPP auth code, as needed for outbound transfers in some circumstances.
-    /// This MAY issue a new authcode, so it's not suitable to call if you're caching an older copy of the authcode,
-    /// and it's inadvisable to access this while a transfer is in progress.
+    ///     Returns the domain's EPP auth code, as needed for outbound transfers in some circumstances.
+    ///     This MAY issue a new authcode, so it's not suitable to call if you're caching an older copy of the authcode,
+    ///     and it's inadvisable to access this while a transfer is in progress.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/authcode"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/authcode" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -2286,11 +2352,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns information about the pending transfer (if any).
+    ///     Returns information about the pending transfer (if any).
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/transferinfo"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/transferinfo" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -2300,11 +2366,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the flag allowing or disallowing transfers.
+    ///     Get the flag allowing or disallowing transfers.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/canTransfer"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/canTransfer" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -2314,11 +2380,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set the flag allowing or disallowing transfers, aka the "domain lock".
+    ///     Set the flag allowing or disallowing transfers, aka the "domain lock".
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/canTransfer"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/canTransfer" />
     /// <remarks> body: {enabled:true} </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
@@ -2330,12 +2396,12 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
-    
+
+
     /// <summary>
-    /// Modify an incoming transfer.
+    ///     Modify an incoming transfer.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/updateTransfer"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/updateTransfer" />
     /// <remarks> body: { action: "string", authInfo:{ pw: "string" }, configuration:{ } } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
@@ -2347,11 +2413,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Resend the registrant verification email, if one applies.
+    ///     Resend the registrant verification email, if one applies.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/resendVerificationEmail"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/resendVerificationEmail" />
     /// <remarks> body: { } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
@@ -2363,11 +2429,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns true if this domain is waiting for transfer completion.
+    ///     Returns true if this domain is waiting for transfer completion.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/pendingTransfer"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/pendingTransfer" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -2377,11 +2443,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the Website Builder SSO link.
+    ///     Returns the Website Builder SSO link.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/websiteBuilderSso"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/websiteBuilderSso" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebWebsiteBuilderSso(string packageId)
@@ -2390,11 +2456,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get report details for Web disk usage.
+    ///     Get report details for Web disk usage.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/diskUsage"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/diskUsage" />
     /// <remarks> body: { reportId:"string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -2405,11 +2471,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the bandwidth and disk usage stats for the current package
+    ///     Get the bandwidth and disk usage stats for the current package
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/usage"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/usage" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebUsage(string packageId)
@@ -2418,11 +2484,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Generate a webmail single-sign-on URL
+    ///     Generate a webmail single-sign-on URL
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}/webmail"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/email/{mail_id}/webmail" />
     /// <remarks> body: { id: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
@@ -2434,12 +2500,12 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Sends or re-sends the welcome email
-    /// if a contact is found for a provided toAddress then it will be sent to the template data and be available in twig
+    ///     Sends or re-sends the welcome email
+    ///     if a contact is found for a provided toAddress then it will be sent to the template data and be available in twig
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/sendWelcome"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/sendWelcome" />
     /// <remarks> body: { toAddress: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -2450,11 +2516,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns the current live WHOIS text for the domain. Only works for domains registered with 20i.
+    ///     Returns the current live WHOIS text for the domain. Only works for domains registered with 20i.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/whois"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/domain/{domain_id}/whois" />
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
@@ -2464,25 +2530,25 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Recycle a Windows application pool.
+    ///     Recycle a Windows application pool.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/recycleApplicationPool"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/recycleApplicationPool" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     /// <remarks> body: {  } </remarks>
     public async Task<string> PackageWebRecycleApplicationPool(string packageId)
     {
         var url = _baseUrl + "package/" + packageId + "/web/recycleApplicationPool";
-        var response = await _requestHandler.PostAsync(url, _bearer,"{}");
+        var response = await _requestHandler.PostAsync(url, _bearer, "{}");
         return response;
     }
-    
+
     /// <summary>
-    /// Get the existing Windows configuration.
+    ///     Get the existing Windows configuration.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/windowsConfiguration"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/windowsConfiguration" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebWindowsConfiguration(string packageId)
@@ -2491,12 +2557,12 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Update the Windows application pool configuration.
-    /// For example; the runtime version, and the pipeline mode type.
+    ///     Update the Windows application pool configuration.
+    ///     For example; the runtime version, and the pipeline mode type.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/windowsConfiguration"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/windowsConfiguration" />
     /// <remarks> sample body: { ApplicationPoolPipelineMode: "string", ApplicationPoolRuntimeVersion: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -2507,11 +2573,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the WordPress administrator users.
+    ///     Get the WordPress administrator users.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressAdministrators"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressAdministrators" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebWordpressAdministrators(string packageId)
@@ -2520,11 +2586,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get a checksum report of WordPress core files.
+    ///     Get a checksum report of WordPress core files.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressChecksum"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressChecksum" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebWordpressChecksum(string packageId)
@@ -2533,11 +2599,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Ask the platform to fix any checksum issues
+    ///     Ask the platform to fix any checksum issues
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressChecksum"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressChecksum" />
     /// <remarks> sample body: { } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -2548,11 +2614,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns a boolean denoting the result of the wordpress database check.
+    ///     Returns a boolean denoting the result of the wordpress database check.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressDbCheck"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressDbCheck" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebWordpressDbCheck(string packageId)
@@ -2561,11 +2627,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Install the StackCache plugin for this package.
+    ///     Install the StackCache plugin for this package.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressInstallStackCache"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressInstallStackCache" />
     /// <remarks> sample body: { } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -2576,11 +2642,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Checks whether or not WordPress is currently installed.
+    ///     Checks whether or not WordPress is currently installed.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressIsInstalled"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressIsInstalled" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebWordpressIsInstalled(string packageId)
@@ -2589,11 +2655,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns an array of Installed wordpress plugins.
+    ///     Returns an array of Installed wordpress plugins.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressPlugins"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressPlugins" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebWordpressPlugins(string packageId)
@@ -2602,11 +2668,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set status or remove a WordPress plugin.
+    ///     Set status or remove a WordPress plugin.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressPlugins"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressPlugins" />
     /// <remarks> sample body: { type: "string", name: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -2617,11 +2683,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the WordPress roles.
+    ///     Get the WordPress roles.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressRoles"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressRoles" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebWordpressRoles(string packageId)
@@ -2630,11 +2696,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Perform a WordPress search and replace.
+    ///     Perform a WordPress search and replace.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressSearchReplace"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressSearchReplace" />
     /// <remarks> body { search: "string", replace: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -2645,11 +2711,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the WordPress site settings
+    ///     Get the WordPress site settings
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressSettings"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressSettings" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebWordpressSettings(string packageId)
@@ -2658,11 +2724,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set a WordPress site setting
+    ///     Set a WordPress site setting
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressSettings"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressSettings" />
     /// <remarks> sample body: { option_name: "string", option_value: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -2673,11 +2739,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Remove a staging clone by id
+    ///     Remove a staging clone by id
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressStagingRemoveClone"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressStagingRemoveClone" />
     /// <remarks> sample body: { id: 1 } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -2688,11 +2754,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns a result based on whether the staging version is in place.
+    ///     Returns a result based on whether the staging version is in place.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressStaging"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressStaging" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebWordpressStaging(string packageId)
@@ -2701,11 +2767,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Clone a new WordPress site either from live to staging or from staging to live.
+    ///     Clone a new WordPress site either from live to staging or from staging to live.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressStaging"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressStaging" />
     /// <remarks> sample body: { type:"string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -2716,11 +2782,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns an array of the installed WordPress themes.
+    ///     Returns an array of the installed WordPress themes.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressThemes"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressThemes" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebWordpressThemes(string packageId)
@@ -2729,11 +2795,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set status (i.e. activate/deactivate) or remove a WordPress theme.
+    ///     Set status (i.e. activate/deactivate) or remove a WordPress theme.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressTheme"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressTheme" />
     /// <remarks> sample body: { type: "string", name: "string" } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -2744,11 +2810,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Update WordPress to the latest version.
+    ///     Update WordPress to the latest version.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressUpdate"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressUpdate" />
     /// <remarks> sample body: {  } </remarks>
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
@@ -2759,11 +2825,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Get Wordpress Users
+    ///     Get Wordpress Users
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressUsers"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressUsers" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebWordpressUsers(string packageId)
@@ -2772,11 +2838,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the WordPress version if installed.
+    ///     Get the WordPress version if installed.
     /// </summary>
-    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressVersion"/>
+    /// <see cref="https://api.20i.com/package/{package_id}/web/wordpressVersion" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebWordpressVersion(string packageId)
@@ -2785,22 +2851,29 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
+
     #endregion
-    
+
     #region Reseller
-    
+
     /// <summary>
-    /// Transfer a domain name.
-    /// This will charge the appropriate transfer fee to your 20i Balance.
-    /// If you don't have enough left, this will fail.
-    /// If you enable privacy you will also be charged a fee for the privacy service.
-    /// This will return true if the transfer purchase was accepted.
-    /// This doesn't guarantee that the transfer will succeed.
-    /// Please note you can also just use contract#add, this method only does a simple reformatting to use that.
-    /// Please see the documentation there for details.
+    ///     Transfer a domain name.
+    ///     This will charge the appropriate transfer fee to your 20i Balance.
+    ///     If you don't have enough left, this will fail.
+    ///     If you enable privacy you will also be charged a fee for the privacy service.
+    ///     This will return true if the transfer purchase was accepted.
+    ///     This doesn't guarantee that the transfer will succeed.
+    ///     Please note you can also just use contract#add, this method only does a simple reformatting to use that.
+    ///     Please see the documentation there for details.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/transferDomain"/>
-    /// <remarks> sample body: { name: "string", years: 1, contact:{ organisation: "string", name: "string", address: "string", telephone: "string", email: "string", cc: "string", pc: "string", sp: "string", city: "string", extension:{ } }, emulateYears: true, otherContacts:{ (type):{ name: "string", organisation: "string", address: "string", city: "string", sp: "string", pc: "string", cc: "string", telephone: "string", email: "string", extension:{ } } }, authcode: "string", limits:{ }, nameservers: ["string"], privacyService: true, stackUser: "string" } </remarks>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/transferDomain" />
+    /// <remarks>
+    ///     sample body: { name: "string", years: 1, contact:{ organisation: "string", name: "string", address: "string",
+    ///     telephone: "string", email: "string", cc: "string", pc: "string", sp: "string", city: "string", extension:{ } },
+    ///     emulateYears: true, otherContacts:{ (type):{ name: "string", organisation: "string", address: "string", city:
+    ///     "string", sp: "string", pc: "string", cc: "string", telephone: "string", email: "string", extension:{ } } },
+    ///     authcode: "string", limits:{ }, nameservers: ["string"], privacyService: true, stackUser: "string" }
+    /// </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
@@ -2810,11 +2883,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Get the password reset email template (or the default value)
+    ///     Get the password reset email template (or the default value)
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/passwordResetEmail"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/passwordResetEmail" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> ResellerPasswordResetEmail(string resellerId)
@@ -2823,11 +2896,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set the password reset email.
+    ///     Set the password reset email.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/passwordResetEmail"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/passwordResetEmail" />
     /// <remarks> sample body: { content: "string" } </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
@@ -2838,11 +2911,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Mailbox quota addons Returns a short, cheap list items.
+    ///     Mailbox quota addons Returns a short, cheap list items.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/mailbox_quota_addon"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/mailbox_quota_addon" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> ResellerMailboxQuotaAddon(string resellerId)
@@ -2851,11 +2924,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// List Virtual Nameservers
+    ///     List Virtual Nameservers
     /// </summary>
-    /// <see cref="https://api.20i.com/personal_nameserver"/>
+    /// <see cref="https://api.20i.com/personal_nameserver" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PersonalNameserver(string resellerId)
@@ -2864,11 +2937,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Renew an MSSQL database with the provided ID
+    ///     Renew an MSSQL database with the provided ID
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/renewMssqlPre"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/renewMssqlPre" />
     /// <remarks> sample body: { id: "string" } </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
@@ -2879,11 +2952,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Get existing multisite backups.
+    ///     Get existing multisite backups.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/backupBulkPackages"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/backupBulkPackages" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> ResellerBackupBulkPackages(string resellerId)
@@ -2892,11 +2965,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Backup Multiple packages
+    ///     Backup Multiple packages
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/backupBulkPackages"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/backupBulkPackages" />
     /// <remarks> sample body:{ id: ["string"], delete: true } </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
@@ -2907,11 +2980,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Fetch your current Nominet brand settings
+    ///     Fetch your current Nominet brand settings
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/nominetBrand"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/nominetBrand" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> ResellerNominetBrand(string resellerId)
@@ -2920,12 +2993,15 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Set Nominet reseller settings
+    ///     Set Nominet reseller settings
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/nominetBrand"/>
-    /// <remarks> body { nominetReseller: "string", ukResellerEmail: "string", ukResellerTradingName: "string", ukResellerUrl: "string", ukResellerVoice: "string" } </remarks>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/nominetBrand" />
+    /// <remarks>
+    ///     body { nominetReseller: "string", ukResellerEmail: "string", ukResellerTradingName: "string", ukResellerUrl:
+    ///     "string", ukResellerVoice: "string" }
+    /// </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
@@ -2935,17 +3011,23 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Register a domain name.
-    /// This will charge the appropriate registration fee to your 20i Balance.
-    /// If you don't have enough left, this will fail.
-    /// If you enable privacy you will also be charged a fee for the privacy service.
-    /// Please note you can also just use contract#add, this method only does a simple reformatting to use that.
-    /// Please see the documentation there for details.
+    ///     Register a domain name.
+    ///     This will charge the appropriate registration fee to your 20i Balance.
+    ///     If you don't have enough left, this will fail.
+    ///     If you enable privacy you will also be charged a fee for the privacy service.
+    ///     Please note you can also just use contract#add, this method only does a simple reformatting to use that.
+    ///     Please see the documentation there for details.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/addDomain"/>
-    /// <remarks> body: { name: "string", years: 1, caRegistryAgreement: true, contact:{ organisation: "string", name: "string", address: "string", telephone: "string", email: "string", cc: "string", pc: "string", sp: "string", city: "string", extension:{ } }, limits:{ }, otherContacts:{ (type):{ name: "string", organisation: "string", address: "string", city: "string", sp: "string", pc: "string", cc: "string", telephone: "string", email: "string", extension:{ } } }, nameservers: ["string"], privacyService: true, stackUser: "string" } </remarks>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/addDomain" />
+    /// <remarks>
+    ///     body: { name: "string", years: 1, caRegistryAgreement: true, contact:{ organisation: "string", name:
+    ///     "string", address: "string", telephone: "string", email: "string", cc: "string", pc: "string", sp: "string", city:
+    ///     "string", extension:{ } }, limits:{ }, otherContacts:{ (type):{ name: "string", organisation: "string", address:
+    ///     "string", city: "string", sp: "string", pc: "string", cc: "string", telephone: "string", email: "string",
+    ///     extension:{ } } }, nameservers: ["string"], privacyService: true, stackUser: "string" }
+    /// </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
@@ -2955,14 +3037,15 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Add an MS SQL Server allowance.
-    /// This will charge the appropriate fee to your 20i Balance.
-    /// If you don't have enough left, this will fail.
-    /// Please note you can also use contract#add, this method only does a trivial reformatting to use that, specifically: https://prnt.sc/RDOOsJYX-nQN
+    ///     Add an MS SQL Server allowance.
+    ///     This will charge the appropriate fee to your 20i Balance.
+    ///     If you don't have enough left, this will fail.
+    ///     Please note you can also use contract#add, this method only does a trivial reformatting to use that, specifically:
+    ///     https://prnt.sc/RDOOsJYX-nQN
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/addMssql"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/addMssql" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
@@ -2972,12 +3055,12 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Order a TLS certificate for a site.
-    /// This will charge the appropriate fee to your 20i Balance. If you don't have enough left, this will fail.
+    ///     Order a TLS certificate for a site.
+    ///     This will charge the appropriate fee to your 20i Balance. If you don't have enough left, this will fail.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/addTlsCertificate"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/addTlsCertificate" />
     /// <remarks> body { periodMonths: 1, name: "string", configuration:{ } } </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
@@ -2988,12 +3071,15 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Order a vps
+    ///     Order a vps
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/addVPS"/>
-    /// <remarks> https://prnt.sc/_6Hfr9gHcV2G body { configuration:{ ApplicationId: "string", Name: "string" }, forUser: "string", options:{ os: "string" }, periodMonths: 1, type: "string" } </remarks>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/addVPS" />
+    /// <remarks>
+    ///     https://prnt.sc/_6Hfr9gHcV2G body { configuration:{ ApplicationId: "string", Name: "string" }, forUser:
+    ///     "string", options:{ os: "string" }, periodMonths: 1, type: "string" }
+    /// </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
@@ -3003,13 +3089,17 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Add a web site.
-    /// If a welcome email is set for the type and you pass an existing Stack user reference, the welcome email will be sent ASAP.
+    ///     Add a web site.
+    ///     If a welcome email is set for the type and you pass an existing Stack user reference, the welcome email will be
+    ///     sent ASAP.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/addWeb"/>
-    /// <remarks> body: { type: "string", domain_name: "string", extra_domain_names: ["string"], label: "string", documentRoots:{ (domain): "string" }, stackUser: "string" } </remarks>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/addWeb" />
+    /// <remarks>
+    ///     body: { type: "string", domain_name: "string", extra_domain_names: ["string"], label: "string",
+    ///     documentRoots:{ (domain): "string" }, stackUser: "string" }
+    /// </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
@@ -3019,11 +3109,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Fetch the package branding.
+    ///     Fetch the package branding.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/packageTypeBrand"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/packageTypeBrand" />
     /// <remarks> body: { packageid: "string" } </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
@@ -3034,11 +3124,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns a count of packages split by type. Current types are linux, windows and wordpress
+    ///     Returns a count of packages split by type. Current types are linux, windows and wordpress
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/packageCount"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/packageCount" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> ResellerPackageCount(string resellerId)
@@ -3047,11 +3137,11 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Delete the web site/packages using the array of ID's in delete-id as a list of packages to delete.
+    ///     Delete the web site/packages using the array of ID's in delete-id as a list of packages to delete.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/deleteWeb"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/deleteWeb" />
     /// <remarks> body: { delete-id: ["string"] } </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
@@ -3062,11 +3152,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Get package type information.
+    ///     Get package type information.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/packageTypes"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/packageTypes" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> ResellerPackageTypes(string resellerId)
@@ -3075,12 +3165,17 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Add a web type.
+    ///     Add a web type.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/packageTypes"/>
-    /// <remarks> body { label: "string", platform: "string", limit:{ }, installApps: ["string"], welcomeEmail:{ from: "string", subject: "string", data: "string" }, passwordResetEmail: "string", defaultPages:{ IndexPageHtml: "string", DeactivatedPageHtml: "string", ServiceUnavailablePageHtml: "string" }, extraData:{ temporaryUrlDomain: "string" } } </remarks>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/packageTypes" />
+    /// <remarks>
+    ///     body { label: "string", platform: "string", limit:{ }, installApps: ["string"], welcomeEmail:{ from:
+    ///     "string", subject: "string", data: "string" }, passwordResetEmail: "string", defaultPages:{ IndexPageHtml:
+    ///     "string", DeactivatedPageHtml: "string", ServiceUnavailablePageHtml: "string" }, extraData:{ temporaryUrlDomain:
+    ///     "string" } }
+    /// </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
@@ -3090,12 +3185,16 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Update web types.
+    ///     Update web types.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/updateWebType"/>
-    /// <remarks> body { delete-id: ["string"], extraData:{ (id):{ temporaryUrlDomain: "string" } }, id: ["string"], installApps:{ (type_id): ["string"] }, labels:{ }, limit:{ (type_id):{ (limit_code): true } }, platform: "string", syncLimits:{ (type_id): true }, welcomeEmail:{ (id):{ subject: "string", from: "string", content: "string" } } } </remarks>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/updateWebType" />
+    /// <remarks>
+    ///     body { delete-id: ["string"], extraData:{ (id):{ temporaryUrlDomain: "string" } }, id: ["string"],
+    ///     installApps:{ (type_id): ["string"] }, labels:{ }, limit:{ (type_id):{ (limit_code): true } }, platform: "string",
+    ///     syncLimits:{ (type_id): true }, welcomeEmail:{ (id):{ subject: "string", from: "string", content: "string" } } }
+    /// </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
@@ -3105,12 +3204,16 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Delete web sites or update their limits or labels.
+    ///     Delete web sites or update their limits or labels.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/updatePackage"/>
-    /// <remarks> body { billing:{ (package_id):{ date: "string", interval: 1, preferredUser: "string", } }, delete-id: ["string"], id: ["string"], labels:{ (package_id): "string" }, limit:{ (package_id):{ (limit_code): true } }, limit-set:{ (package_id):{ (limit_code): true } }, packageBundleTypes:{ (package_id): "string" } } </remarks>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/updatePackage" />
+    /// <remarks>
+    ///     body { billing:{ (package_id):{ date: "string", interval: 1, preferredUser: "string", } }, delete-id:
+    ///     ["string"], id: ["string"], labels:{ (package_id): "string" }, limit:{ (package_id):{ (limit_code): true } },
+    ///     limit-set:{ (package_id):{ (limit_code): true } }, packageBundleTypes:{ (package_id): "string" } }
+    /// </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
@@ -3120,11 +3223,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Sends a password reset email, given a password reset token. See passwordResetInfo on the authentication service.
+    ///     Sends a password reset email, given a password reset token. See passwordResetInfo on the authentication service.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/resetPassword"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/resetPassword" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
@@ -3134,14 +3237,14 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Renew a domain name.
-    /// This will charge the appropriate registration fee to your 20i Balance.
-    /// If you don't have enough left, this will fail.
-    /// Please note you can also use contract/domain:{id}#renew, this method only does a trivial reformatting to use that.
+    ///     Renew a domain name.
+    ///     This will charge the appropriate registration fee to your 20i Balance.
+    ///     If you don't have enough left, this will fail.
+    ///     Please note you can also use contract/domain:{id}#renew, this method only does a trivial reformatting to use that.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/renewDomain"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/renewDomain" />
     /// <remarks> body { name: "string", years: 1, renewPrivacy: true } </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
@@ -3152,13 +3255,13 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Renew the MSSQL database of the given ID This will charge the appropriate registration fee to your 20i Balance. 
-    /// If you don't have enough left, this will fail. 
-    ///Please note you can also use contract/mssql:{id}#renew, this method only does a trivial reformatting to use that.
+    ///     Renew the MSSQL database of the given ID This will charge the appropriate registration fee to your 20i Balance.
+    ///     If you don't have enough left, this will fail.
+    ///     Please note you can also use contract/mssql:{id}#renew, this method only does a trivial reformatting to use that.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/renewMssql"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/renewMssql" />
     /// <remarks> body { id: "string"} </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
@@ -3169,13 +3272,14 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Renew a certificate. This will charge the appropriate fee to your 20i Balance. 
-    /// If you don't have enough left, this will fail.
-    /// Please note you can also use contract/tls_certificate:{id}#renew, this method only does a trivial reformatting to use that.
+    ///     Renew a certificate. This will charge the appropriate fee to your 20i Balance.
+    ///     If you don't have enough left, this will fail.
+    ///     Please note you can also use contract/tls_certificate:{id}#renew, this method only does a trivial reformatting to
+    ///     use that.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/renewTlsCertificate"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/renewTlsCertificate" />
     /// <remarks> body {id: "string" , periodMonths: 1} </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
@@ -3186,12 +3290,15 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Updates the reseller
+    ///     Updates the reseller
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}"/>
-    /// <remarks> body { malwareEmails: true, malwareEmailsStackCpUsers: true, migrationCompleteEmails: true, domainAutoRenewDefault: true } </remarks>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}" />
+    /// <remarks>
+    ///     body { malwareEmails: true, malwareEmailsStackCpUsers: true, migrationCompleteEmails: true,
+    ///     domainAutoRenewDefault: true }
+    /// </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
@@ -3201,11 +3308,11 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
+
     /// <summary>
-    /// Returns your Stack user config.
+    ///     Returns your Stack user config.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/susers"/>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/susers" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <returns>The raw json response as a string</returns>
     public async Task<string> ResellerSusers(string resellerId)
@@ -3214,12 +3321,21 @@ public class TwentyIApi
         var response = await _requestHandler.GetAsync(url, _bearer);
         return response;
     }
-    
+
     /// <summary>
-    /// Update your Stack users.
+    ///     Update your Stack users.
     /// </summary>
-    /// <see cref="https://api.20i.com/reseller/{reseller_id}/susers"/>
-    /// <remarks> body: { contact:{ (user_ref):{ person_name: "string", company_name: "string", address: "string", city: "string", sp: "string", pc: "string", cc: "string", voice: "string", notes: "string", billing_ref: "string", email: "string", } }, ftpLock:{ (user_ref):{ existing:{ (lock_ref):{ Ip4Address: "string", Ip6Address: "string", delete: true } }, new:{ Ip4Address: "string", Ip6Address: "string" } } }, grant_map:{ (user_ref):{ (service_ref): true } }, masterFtpAcl:{ (user_ref):{ Ip4Address: ["string"] } }, newUser:{ person_name: "string", company_name: "string", address: "string", city: "string", sp: "string", pc: "string", cc: "string", voice: "string", notes: "string", billing_ref: "string", email: "string", nominet_contact_type: "string", sendNewStackUserEmail: true, }, users:{ (user_ref):{ password: "string", delete: true } }, masterFtp:{ } } </remarks>
+    /// <see cref="https://api.20i.com/reseller/{reseller_id}/susers" />
+    /// <remarks>
+    ///     body: { contact:{ (user_ref):{ person_name: "string", company_name: "string", address: "string", city:
+    ///     "string", sp: "string", pc: "string", cc: "string", voice: "string", notes: "string", billing_ref: "string", email:
+    ///     "string", } }, ftpLock:{ (user_ref):{ existing:{ (lock_ref):{ Ip4Address: "string", Ip6Address: "string", delete:
+    ///     true } }, new:{ Ip4Address: "string", Ip6Address: "string" } } }, grant_map:{ (user_ref):{ (service_ref): true } },
+    ///     masterFtpAcl:{ (user_ref):{ Ip4Address: ["string"] } }, newUser:{ person_name: "string", company_name: "string",
+    ///     address: "string", city: "string", sp: "string", pc: "string", cc: "string", voice: "string", notes: "string",
+    ///     billing_ref: "string", email: "string", nominet_contact_type: "string", sendNewStackUserEmail: true, }, users:{
+    ///     (user_ref):{ password: "string", delete: true } }, masterFtp:{ } }
+    /// </remarks>
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
@@ -3229,8 +3345,6 @@ public class TwentyIApi
         var response = await _requestHandler.PostAsync(url, _bearer, body);
         return response;
     }
-    
-    
-    
+
     #endregion
 }
