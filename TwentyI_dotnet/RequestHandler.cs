@@ -15,7 +15,7 @@ public class RequestHandler : IRequestHandler
 {
 
     private readonly HttpClient _client;
-    
+
     /// <summary>
     /// Constructor for injecting the HttpClient
     /// </summary>

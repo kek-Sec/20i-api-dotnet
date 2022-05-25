@@ -14,11 +14,12 @@ public class TwentyIApi
     /// <summary>
     /// Constructor, will be used to set the bearer token and the http client
     /// </summary>
-    /// <param name="bearer">Bearer token</param>
+    /// <param name="bearer">Bearer token, the General API key provided by 20i</param>
     /// <param name="client">Http client</param>
     public TwentyIApi(string bearer, HttpClient client)
     {
-        _bearer = bearer;
+        //base64 encode the bearer token
+        _bearer = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(bearer));
         _client = client;
         _requestHandler = new RequestHandler(_client);
     }
