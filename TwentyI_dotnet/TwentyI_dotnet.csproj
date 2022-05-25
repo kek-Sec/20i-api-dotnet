@@ -14,9 +14,19 @@
         <RepositoryType>git</RepositoryType>
         <PackageTags>20i;api;reseller;hosting;domain;backups;wordpress</PackageTags>
         <NeutralLanguage>en</NeutralLanguage>
+        <AssemblyVersion>25.05.22</AssemblyVersion>
+        <FileVersion>1.1.0.0</FileVersion>
+        <PackageId>20i-api-dotnet</PackageId>
+        <PackageVersion>25.05.22</PackageVersion>
+        <Authors>Petrakis G.</Authors>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DocumentationFile>bin\Debug\TwentyI_dotnet.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\TwentyI_dotnet.xml</DocumentationFile>
     </PropertyGroup>
     
-    <Target Name="NugetPackAutoVersioning" AfterTargets="Publish">
-        <Exec Command="dotnet pack -p:PackageVersion=$([System.DateTime]::Now.ToString(&quot;yyyy.MM.dd.HHmmss&quot;)) --no-build --configuration $(Configuration) --output &quot;$(SolutionDir)nuget&quot;" />
-    </Target>
 </Project>
