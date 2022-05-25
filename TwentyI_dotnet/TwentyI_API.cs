@@ -4,7 +4,7 @@ namespace TwentyI_dotnet;
 /// <summary>
 /// Library entry class 
 /// </summary>
-public class TwentyI_API
+public class TwentyIApi
 {
     private readonly HttpClient _client;
     private readonly string _baseUrl = "https://api.20i.com/";
@@ -16,7 +16,7 @@ public class TwentyI_API
     /// </summary>
     /// <param name="bearer">Bearer token</param>
     /// <param name="client">Http client</param>
-    public TwentyI_API(string bearer, HttpClient client)
+    public TwentyIApi(string bearer, HttpClient client)
     {
         _bearer = bearer;
         _client = client;
@@ -1565,7 +1565,7 @@ public class TwentyI_API
     /// <see cref="https://api.20i.com/package/{package_id}/web/mysqlSSO"/>
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMysqlSSO(string packageId)
+    public async Task<string> PackageWebMysqlSso(string packageId)
     {
         var url = _baseUrl + "package/" + packageId + "/web/mysqlSSO";
         var response = await _requestHandler.GetAsync(url, _bearer);
