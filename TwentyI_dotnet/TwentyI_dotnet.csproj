@@ -1,9 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <PackageLicenseExpression>MS-PL</PackageLicenseExpression>
+        <PackageOutputPath>./nupkg</PackageOutputPath>
+        <RepositoryUrl>https://github.com/kek-Sec/TwentyI_dotnet</RepositoryUrl>
+        <RepositoryBranch>master</RepositoryBranch>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <Company>Petrakis G.</Company>
+        <Description>.net wrapper for the 20i api.</Description>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>20i;api;reseller;hosting;domain;backups;wordpress</PackageTags>
+        <NeutralLanguage>en</NeutralLanguage>
     </PropertyGroup>
-
+    
+    <Target Name="NugetPackAutoVersioning" AfterTargets="Publish">
+        <Exec Command="dotnet pack -p:PackageVersion=$([System.DateTime]::Now.ToString(&quot;yyyy.MM.dd.HHmmss&quot;)) --no-build --configuration $(Configuration) --output &quot;$(SolutionDir)nuget&quot;" />
+    </Target>
 </Project>
