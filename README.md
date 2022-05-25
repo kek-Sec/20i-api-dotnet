@@ -1,6 +1,8 @@
 ﻿# 20i API dotnet libary
 
-![Nuget](https://img.shields.io/nuget/v/20i-api-dotnet?style=flat-square)
+![Nuget](https://img.shields.io/nuget/v/20i-api-dotnet?style=flat-square) 
+#### [Nuget Gallery](https://www.nuget.org/packages/20i-api-dotnet/)
+
 
 #### Get started with 3 steps
 
