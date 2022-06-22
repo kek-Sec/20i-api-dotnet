@@ -1402,19 +1402,6 @@ public class TwentyIApi
     }
 
     /// <summary>
-    ///     Returns the latest malware report for a given website
-    /// </summary>
-    /// <see href="https://api.20i.com/package/{package_id}/web/malwareReport" />
-    /// <param name="packageId">The id of the package</param>
-    /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMalwareReport(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/malwareReport";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
-
-    /// <summary>
     ///     Get the malware scan objects for this web
     /// </summary>
     /// <see href="https://api.20i.com/package/{package_id}/web/malwareScan" />
