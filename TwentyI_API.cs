@@ -1424,9 +1424,7 @@ public class TwentyIApi
     /// <returns>The raw json response as a string</returns>
     public async Task<string> PackageWebMalwareScan(string packageId, string body)
     {
-        var url = _baseUrl + "package/" + packageId + "/web/malwareScan";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
+        return await this._requestHandler.PostAsync(this._baseUrl + "package/" + packageId + "/web/malwareScan", this._bearer, body);
     }
 
     /// <summary>
