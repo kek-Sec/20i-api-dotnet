@@ -1,13 +1,13 @@
 ﻿# 20i API dotnet libary
 
 ![Nuget](https://img.shields.io/nuget/v/20i-api-dotnet?style=flat-square)  ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/kek-Sec/20i-api-dotnet/.NET?style=flat-square)
-#### [Nuget Gallery](https://www.nuget.org/packages/20i-api-dotnet/)
+#### [Nuget Gallery](https://www.nuget.org/packages/20i-api/)
 
 
 #### Get started with 3 steps
 
 1. Install Nuget package
- - ``` dotnet add package 20i-api-dotnet  ```
+ - ``` dotnet add package 20i-api  ```
 
 2. Create new instance of 20i API
  - ``` var api = new TwentyIApi(bearer,new HttpClient()); ```
