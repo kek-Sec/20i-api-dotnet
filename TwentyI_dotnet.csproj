@@ -16,7 +16,7 @@
         <NeutralLanguage>en</NeutralLanguage>
         <AssemblyVersion>25.05.22.2</AssemblyVersion>
         <FileVersion>1.1.0.0</FileVersion>
-        <PackageId>20i-api-dotnet</PackageId>
+        <PackageId>20i-api</PackageId>
         <PackageVersion>25.05.22.2</PackageVersion>
         <Authors>Petrakis G.</Authors>
     </PropertyGroup>
