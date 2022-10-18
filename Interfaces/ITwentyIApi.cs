@@ -1,56 +1,20 @@
-﻿using System.Text;
-using TwentyI_dotnet.Interfaces;
+﻿namespace TwentyI_dotnet.Interfaces;
 
-namespace TwentyI_dotnet;
-
-/// <summary>
-///     Library entry class
-/// </summary>
-public class TwentyIApi : ITwentyIApi
+public interface ITwentyIApi
 {
-    private readonly string _baseUrl = "https://api.20i.com/";
-    private readonly string _bearer;
-    private readonly HttpClient _client;
-    private readonly IRequestHandler _requestHandler;
-
-    /// <summary>
-    ///     Constructor, will be used to set the bearer token and the http client
-    /// </summary>
-    /// <param name="bearer">Bearer token, the General API key provided by 20i</param>
-    /// <param name="client">Http client</param>
-    public TwentyIApi(string bearer, HttpClient client)
-    {
-        //base64 encode the bearer token
-        _bearer = Convert.ToBase64String(Encoding.UTF8.GetBytes(bearer));
-        _client = client;
-        _requestHandler = new RequestHandler(_client);
-    }
-
-    #region Domain Related Requests
-
     /// <summary>
     ///     List all possible domains that are supported with the periods that are supported for registration
     /// </summary>
     /// <see href="https://api.20i.com/domain-period" />
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> GetDomainPeriods()
-    {
-        var url = _baseUrl + "domain-period";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> GetDomainPeriods();
 
     /// <summary>
     ///     List all domain extentions with their associated premium group.
     /// </summary>
     /// <see href="https://api.20i.com/domainPremiumType" />
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> GetDomainPremiumTypes()
-    {
-        var url = _baseUrl + "domainPremiumType";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> GetDomainPremiumTypes();
 
     /// <summary>
     ///     Searches for one or more domain names.
@@ -80,28 +44,14 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/domain-search/{query}" />
     /// <param name="query">The query to search for</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> GetDomainSearch(string query)
-    {
-        var url = _baseUrl + "domain-search/" + query;
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> GetDomainSearch(string query);
 
     /// <summary>
     ///     RetrieveDomains Returns basic information about the domains in the account.
     /// </summary>
     /// <see href="https://api.20i.com/domain" />
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> GetDomains()
-    {
-        var url = _baseUrl + "domain";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
-
-    #endregion
-
-    #region Managed Vps Requests
+    Task<string> GetDomains();
 
     /// <summary>
     ///     Activates or deactivates the service. Possible subservice_name are 'default' for a typical set of services and
@@ -112,12 +62,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="id">The id of the managed vps</param>
     /// <param name="body">The json body to send</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> SetManagedVpsUserStatus(string id, string body)
-    {
-        var url = _baseUrl + "managed_vps/" + id + "/userStatus";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> SetManagedVpsUserStatus(string id, string body);
 
     /// <summary>
     ///     Add a web site.
@@ -127,12 +72,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="id">The id of the managed vps</param>
     /// <param name="body">The json body to send</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ManagedVpsAddWeb(string id, string body)
-    {
-        var url = _baseUrl + "managed_vps/" + id + "/addWeb";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> ManagedVpsAddWeb(string id, string body);
 
     /// <summary>
     ///     Delete web sites.
@@ -142,12 +82,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="id">The id of the managed vps</param>
     /// <param name="body">The json body to send</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ManagedVpsDeleteWeb(string id, string body)
-    {
-        var url = _baseUrl + "managed_vps/" + id + "/deleteWeb";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> ManagedVpsDeleteWeb(string id, string body);
 
     /// <summary>
     ///     Returns an object representation of your managed VPS.
@@ -155,12 +90,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/managed_vps/{id}" />
     /// <param name="id">The id of the managed vps</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> GetManagedVps(string id)
-    {
-        var url = _baseUrl + "managed_vps/" + id;
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> GetManagedVps(string id);
 
     /// <summary>
     ///     Returns the count of how many packages can be created on this managed VPS.
@@ -168,24 +98,14 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/managed_vps/{id}/packageCount" />
     /// <param name="id">The id of the managed vps</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> GetManagedVpsPackageCount(string id)
-    {
-        var url = _baseUrl + "managed_vps/" + id + "/packageCount";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> GetManagedVpsPackageCount(string id);
 
     /// <summary>
     ///     Returns a short, cheap set of info for all managed VPSs.
     /// </summary>
     /// <see href="https://api.20i.com/managed_vps" />
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> GetManagedVpsList()
-    {
-        var url = _baseUrl + "managed_vps";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> GetManagedVpsList();
 
     /// <summary>
     ///     Returns the name of one Managed VPS.
@@ -193,12 +113,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/managed_vps/{id}/name" />
     /// <param name="id">The id of the managed vps</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> GetManagedVpsName(string id)
-    {
-        var url = _baseUrl + "managed_vps/" + id + "/name";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> GetManagedVpsName(string id);
 
     /// <summary>
     ///     Set the VPS Name
@@ -208,28 +123,14 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="id">The id of the managed vps</param>
     /// <param name="body">The json body to send</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ManagedVpsSetName(string id, string body)
-    {
-        var url = _baseUrl + "managed_vps/" + id + "/name";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
-
-    #endregion
-
-    #region MSSQL Endpoints
+    Task<string> ManagedVpsSetName(string id, string body);
 
     /// <summary>
     ///     Retrieve MSSQL Databases
     /// </summary>
     /// <see href="https://api.20i.com/mssql" />
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> GetMssql()
-    {
-        var url = _baseUrl + "mssql";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> GetMssql();
 
     /// <summary>
     ///     Retrieve MSSQL Database by ID
@@ -237,12 +138,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/mssql/{id}" />
     /// <param name="id">The id of the mssql database</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> GetMssqlById(string id)
-    {
-        var url = _baseUrl + "mssql/" + id;
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> GetMssqlById(string id);
 
     /// <summary>
     ///     Update the config to link the MS SQL product to a package.
@@ -252,16 +148,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="id">The id of the mssql database</param>
     /// <param name="body">The json body to send</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> MssqlLinkPackage(string id, string body)
-    {
-        var url = _baseUrl + "mssql/" + id;
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
-
-    #endregion
-
-    #region Packages Endpoints
+    Task<string> MssqlLinkPackage(string id, string body);
 
     /// <summary>
     ///     Activates or deactivates the service. Possible subservice_name are 'default' for a typical set of services and
@@ -273,12 +160,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="domainId">The id of the domain</param>
     /// <param name="body">The json body to send</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainUserStatus(string packageId, string domainId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/userStatus";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageDomainUserStatus(string packageId, string domainId, string body);
 
     /// <summary>
     ///     Activates or deactivates the service. Possible subservice_name are 'default' for a typical set of services and
@@ -289,12 +171,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The json body to send</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageUserStatus(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/userStatus";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageUserStatus(string packageId, string body);
 
     /// <summary>
     ///     Return a list of installed applications
@@ -302,12 +179,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/installedApplications" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebInstalledApplications(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/installedApplications";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebInstalledApplications(string packageId);
 
     /// <summary>
     ///     Add, remove and update applications and set their environment Currently only one type (add,update,delete,setEnv) is
@@ -322,12 +194,7 @@ public class TwentyIApi : ITwentyIApi
     /// </remarks>
     /// <param name="body">The json body to send</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebInstalledApplications(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/installedApplications";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebInstalledApplications(string packageId, string body);
 
     /// <summary>
     ///     Returns a list of installed software by type code on managed server.
@@ -335,12 +202,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/installedSoftware" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebInstalledSoftware(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/installedSoftware";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebInstalledSoftware(string packageId);
 
     /// <summary>
     ///     Returns the current autoresponder config.
@@ -349,12 +211,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="emailId">The id of the email</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageEmailResponder(string packageId, string emailId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/email/" + emailId + "/responder";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageEmailResponder(string packageId, string emailId);
 
     /// <summary>
     ///     Get the bandwidth stats and hits.
@@ -362,12 +219,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/bandwidthStats" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebBandwidthStats(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/bandwidthStats";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebBandwidthStats(string packageId);
 
     /// <summary>
     ///     Get blocked countries, in the format of 2-digit ISO codes.
@@ -375,12 +227,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/blockedCountries" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebBlockedCountries(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/blockedCountries";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebBlockedCountries(string packageId);
 
     /// <summary>
     ///     Set the blocked countries for the site.
@@ -390,12 +237,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebBlockedCountries(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/blockedCountries";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebBlockedCountries(string packageId, string body);
 
     /// <summary>
     ///     Get blocked IP addresses either in standard format or in CIDR format.
@@ -403,12 +245,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/blockedIpAddresses" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebBlockedIpAddresses(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/blockedIpAddresses";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebBlockedIpAddresses(string packageId);
 
     /// <summary>
     ///     Set the blocked IP addresses for the web|package. This is an array of IP addresses, with an optional CIDR range.
@@ -418,12 +255,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebBlockedIpAddresses(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/blockedIpAddresses";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebBlockedIpAddresses(string packageId, string body);
 
     /// <summary>
     ///     Returns the CDN statistics for the package.
@@ -431,12 +263,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/cdnStats" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebCdnStats(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/cdnStats";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebCdnStats(string packageId);
 
     /// <summary>
     ///     Shows bandwidth and hits split by country as recorded by our edge CDN platform
@@ -444,12 +271,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/cdnStatsTrafficDistribution" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebCdnStatsTrafficDistribution(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/cdnStatsTrafficDistribution";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebCdnStatsTrafficDistribution(string packageId);
 
     /// <summary>
     ///     Returns the current contacts for the domain name. This is a map of contact types to contact data, in EPP format.
@@ -458,12 +280,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainContacts(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/contacts";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainContacts(string packageId, string domainId);
 
     /// <summary>
     ///     Sets the contacts for the domain. This is a map of contact types to contact data, in EPP format.
@@ -474,12 +291,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="domainId">The id of the domain</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainContacts(string packageId, string domainId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/contacts";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageDomainContacts(string packageId, string domainId, string body);
 
     /// <summary>
     ///     Returns some information about the database.
@@ -488,12 +300,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="databaseId">The id of the database</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebDatabase(string packageId, string databaseId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/database/" + databaseId;
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebDatabase(string packageId, string databaseId);
 
     /// <summary>
     ///     Retrieve directory listing configuration.
@@ -501,12 +308,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/directoryIndex" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebDirectoryIndex(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/directoryIndex";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebDirectoryIndex(string packageId);
 
     /// <summary>
     ///     Set up to 5 files for the directory index in the htaccess.
@@ -516,12 +318,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebDirectoryIndex(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/directoryIndex";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebDirectoryIndex(string packageId, string body);
 
     /// <summary>
     ///     Get the directory indexing state
@@ -529,12 +326,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/directoryIndexing" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebDirectoryIndexing(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/directoryIndexing";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebDirectoryIndexing(string packageId);
 
     /// <summary>
     ///     Directory indexing allows visitors to view a list of files instead of the actual webpage. This can turn on/off
@@ -545,12 +337,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebDirectoryIndexing(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/directoryIndexing";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebDirectoryIndexing(string packageId, string body);
 
     /// <summary>
     ///     Request Disk Usage Report
@@ -560,12 +347,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebRequestDiskUsage(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/requestDiskUsage";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebRequestDiskUsage(string packageId, string body);
 
     /// <summary>
     ///     Returns domain DKIM Signatures.
@@ -574,12 +356,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="emailId">The id of the email</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageEmailSignature(string packageId, string emailId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/email/" + emailId + "/signature";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageEmailSignature(string packageId, string emailId);
 
     /// <summary>
     ///     Set or Delete DKIM Signature for a given domain.
@@ -594,12 +371,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="emailId">The id of the email</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageEmailSignature(string packageId, string emailId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/email/" + emailId + "/signature";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageEmailSignature(string packageId, string emailId, string body);
 
     /// <summary>
     ///     Returns the maximum number of nameservers for the domain. You can and should cache this information by TLD.
@@ -608,12 +380,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainMaxNameservers(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/maxNameservers";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainMaxNameservers(string packageId, string domainId);
 
     /// <summary>
     ///     Returns the default DNS records from the web object.
@@ -621,12 +388,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/defaultDns" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDefaultDns(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/defaultDns";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDefaultDns(string packageId);
 
     /// <summary>
     ///     Returns the records needed for a full Google Apps service, including mail and web services.
@@ -637,12 +399,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainDnsGoogleApps(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/dns/googleApps";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainDnsGoogleApps(string packageId, string domainId);
 
     /// <summary>
     ///     Equivalent to adding new DNS records with all the results of GET "googleApps". This will not remove any records by
@@ -654,12 +411,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="domainId">The id of the domain</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainDnsGoogleApps(string packageId, string domainId, dynamic body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/dns/googleApps";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageDomainDnsGoogleApps(string packageId, string domainId, dynamic body);
 
     /// <summary>
     ///     Returns the records needed for Google Mail service.
@@ -670,12 +422,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainDnsGoogleAppsMailOnly(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/dns/googleAppsMailOnly";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainDnsGoogleAppsMailOnly(string packageId, string domainId);
 
     /// <summary>
     ///     Equivalent to adding new DNS records with all the results of GET "googleAppsMailOnly". This will not remove any
@@ -687,12 +434,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="domainId">The id of the domain</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainDnsGoogleAppsMailOnly(string packageId, string domainId, dynamic body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/dns/googleAppsMailOnly";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageDomainDnsGoogleAppsMailOnly(string packageId, string domainId, dynamic body);
 
     /// <summary>
     ///     Returns the current nameservers for the domain, if applicable.
@@ -701,12 +443,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainNameservers(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/nameservers";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainNameservers(string packageId, string domainId);
 
     /// <summary>
     ///     Updates the nameservers for the domain.
@@ -720,12 +457,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="domainId">The id of the domain</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainNameservers(string packageId, string domainId, dynamic body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/nameservers";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageDomainNameservers(string packageId, string domainId, dynamic body);
 
     /// <summary>
     ///     Returns the records needed for office 365 mail.
@@ -734,12 +466,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainDnsOffice365Mail(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/dns/office365Mail";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainDnsOffice365Mail(string packageId, string domainId);
 
     /// <summary>
     ///     Equivalent to adding new DNS records with all the results of GET "Office365MailOnly". This will not remove any
@@ -751,12 +478,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="domainId">The id of the domain</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainDnsOffice365MailOnly(string packageId, string domainId, dynamic body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/dns/office365MailOnly";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageDomainDnsOffice365MailOnly(string packageId, string domainId, dynamic body);
 
     /// <summary>
     ///     Returns the current DNS records for the domain.
@@ -765,12 +487,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainDns(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/dns";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainDns(string packageId, string domainId);
 
     /// <summary>
     ///     Updates the DNS records for the domain, if the DNS service is in use.
@@ -803,12 +520,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="domainId">The id of the domain</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainDnsUpdate(string packageId, string domainId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/dns";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageDomainDnsUpdate(string packageId, string domainId, string body);
 
     /// <summary>
     ///     Returns a map of DNS names to document root subpaths for the site.
@@ -816,12 +528,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/documentRoots" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebDocumentRoots(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/documentRoots";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebDocumentRoots(string packageId);
 
     /// <summary>
     ///     Returns information about the domain.
@@ -830,12 +537,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomain(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId;
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomain(string packageId, string domainId);
 
     /// <summary>
     ///     Will provide a hint on what the current maximum years would be allowed for a renewal
@@ -844,12 +546,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainRenewalMultipleMaxHintFor(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/renewalMultipleMaxHintFor";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainRenewalMultipleMaxHintFor(string packageId, string domainId);
 
     /// <summary>
     ///     Returns the names for this package.
@@ -857,12 +554,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/names" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageNames(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/names";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageNames(string packageId);
 
     /// <summary>
     ///     Add or remove names from the package.
@@ -875,12 +567,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageNames(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/names";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageNames(string packageId, string body);
 
     /// <summary>
     ///     Get details about a given domain, ie is this a domain or subdomain.
@@ -890,12 +577,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebDomainCheck(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/domainCheck";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebDomainCheck(string packageId, string body);
 
     /// <summary>
     ///     Add or remove names from the Web. This is mostly handled on the corresponding Package.
@@ -905,12 +587,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebNames(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/names";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebNames(string packageId, string body);
 
     /// <summary>
     ///     Get a per-year price, if premium, specifically for renewals.
@@ -921,12 +598,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainServicePrice(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/servicePrice";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainServicePrice(string packageId, string domainId);
 
     /// <summary>
     ///     Returns information about the service domain privacy.
@@ -935,12 +607,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainPrivacy(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/privacy";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainPrivacy(string packageId, string domainId);
 
     /// <summary>
     ///     Update the privacy settings for the service domain.
@@ -951,12 +618,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="domainId">The id of the domain</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainPrivacy(string packageId, string domainId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/privacy";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageDomainPrivacy(string packageId, string domainId, string body);
 
     /// <summary>
     ///     Updates the privacy enabled/disabled state (for domains with privacy attached only).
@@ -967,12 +629,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="domainId">The id of the domain</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainPrivacyState(string packageId, string domainId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/privacyState";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageDomainPrivacyState(string packageId, string domainId, string body);
 
     /// <summary>
     ///     Returns the current cached status of the transfer.
@@ -981,12 +638,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainPendingTransferStatus(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/pendingTransferStatus";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainPendingTransferStatus(string packageId, string domainId);
 
     /// <summary>
     ///     Fetches information about WHOIS contact disclosure (Nominet or .IT) for the domain name.
@@ -995,12 +647,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainOptOut(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/optOut";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainOptOut(string packageId, string domainId);
 
     /// <summary>
     ///     Updates the WHOIS disclosure options, for applicable domains.
@@ -1011,12 +658,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="domainId">The id of the domain</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainOptOut(string packageId, string domainId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/optOut";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageDomainOptOut(string packageId, string domainId, string body);
 
     /// <summary>
     ///     Returns the current blacklist config - email.
@@ -1025,12 +667,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageEmailSpamPolicyListBlacklist(string packageId, string mailId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/email/" + mailId + "/spamPolicyListBlacklist";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageEmailSpamPolicyListBlacklist(string packageId, string mailId);
 
     /// <summary>
     ///     Returns the current email configuration for the domain.
@@ -1042,12 +679,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageEmail(string packageId, string mailId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/email/" + mailId;
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageEmail(string packageId, string mailId);
 
     /// <summary>
     ///     Updates the email configuration for the domain.
@@ -1058,12 +690,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="mailId">The id of the mail</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageEmail(string packageId, string mailId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/email/" + mailId;
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageEmail(string packageId, string mailId, string body);
 
     /// <summary>
     ///     Returns the current domain config.
@@ -1072,12 +699,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageEmailDomain(string packageId, string mailId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/email/" + mailId + "/domain";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageEmailDomain(string packageId, string mailId);
 
     /// <summary>
     ///     Returns the current domain alias config.
@@ -1086,12 +708,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageEmailDomainAlias(string packageId, string mailId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/email/" + mailId + "/domainAlias";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageEmailDomainAlias(string packageId, string mailId);
 
     /// <summary>
     ///     Returns the current forwarder config.
@@ -1100,12 +717,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageEmailForwarder(string packageId, string mailId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/email/" + mailId + "/forwarder";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageEmailForwarder(string packageId, string mailId);
 
     /// <summary>
     ///     Fetches all forwarders by package id.
@@ -1113,12 +725,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/email/allMailForwarders" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageEmailAllMailForwarders(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/email/allMailForwarders";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageEmailAllMailForwarders(string packageId);
 
     /// <summary>
     ///     Returns the current whitelist config.
@@ -1127,12 +734,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageEmailSpamPolicyListWhitelist(string packageId, string mailId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/email/" + mailId + "/spamPolicyListWhitelist";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageEmailSpamPolicyListWhitelist(string packageId, string mailId);
 
     /// <summary>
     ///     Get the file permissions that do not match the platform recommendations
@@ -1140,12 +742,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/filePermissions" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebFilePermissions(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/filePermissions";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebFilePermissions(string packageId);
 
     /// <summary>
     ///     Set file permissions
@@ -1155,12 +752,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebFilePermissions(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/filePermissions";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebFilePermissions(string packageId, string body);
 
     /// <summary>
     ///     Returns the current mailbox forwarder config.
@@ -1169,12 +761,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageEmailMailForwarder(string packageId, string mailId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/email/" + mailId + "/mailForwarder";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageEmailMailForwarder(string packageId, string mailId);
 
     /// <summary>
     ///     Returns the FTP credentials (if any).
@@ -1182,12 +769,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/ftpCredentials" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebFtpCredentials(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/ftpCredentials";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebFtpCredentials(string packageId);
 
     /// <summary>
     ///     Returns an array of FTP users for this ExternalId and the Acl associated with the FTP account
@@ -1195,12 +777,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/ftpUsers" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebFtpUsers(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/ftpUsers";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebFtpUsers(string packageId);
 
     /// <summary>
     ///     Update or create a new FTP user. This method will handle the creation of new FTP users and updating existing FTP
@@ -1215,12 +792,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebFtpUsers(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/ftpUsers";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebFtpUsers(string packageId, string body);
 
     /// <summary>
     ///     Returns the home directory for the web site.
@@ -1228,12 +800,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/homeDirectory" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebHomeDirectory(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/homeDirectory";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebHomeDirectory(string packageId);
 
     /// <summary>
     ///     Get the prevent hotlinking config.
@@ -1241,12 +808,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/preventHotlinking" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebPreventHotlinking(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/preventHotlinking";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebPreventHotlinking(string packageId);
 
     /// <summary>
     ///     Set the prevent hotlinking config.
@@ -1259,12 +821,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebPreventHotlinking(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/preventHotlinking";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebPreventHotlinking(string packageId, string body);
 
     /// <summary>
     ///     Returns the limits for the current user, a key-value map.
@@ -1273,12 +830,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainLimits(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/limits";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainLimits(string packageId, string domainId);
 
     /// <summary>
     ///     Returns the limits for the current user, a key-value map.
@@ -1286,12 +838,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/limits" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageLimits(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/limits";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageLimits(string packageId);
 
     /// <summary>
     ///     Retrieve limits for a web.
@@ -1299,12 +846,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/limits" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebLimits(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/limits";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebLimits(string packageId);
 
     /// <summary>
     ///     Returns some information about the database user
@@ -1314,24 +856,23 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="databaseId">The id of the database</param>
     /// <param name="userId">The id of the user</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDatabaseUser(string packageId, string databaseId, string userId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/database/" + databaseId + "/user/" + userId;
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDatabaseUser(string packageId, string databaseId, string userId);
 
     /// <summary>
     ///     Returns information about this service.
     /// </summary>
     /// <see href="https://api.20i.com/package" />
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> Package()
-    {
-        var url = _baseUrl + "package";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> Package();
+
+    /// <summary>
+    ///     Returns an array representation of the package.
+    /// </summary>
+    /// <see href="https://api.20i.com/package/{package_id}" />
+    /// 
+    /// <param name="packageId">The id of the package</param>
+    /// <returns>The raw json response as a string</returns>
+    Task<string> Package(string packageId);
 
     /// <summary>
     ///     Retrieve stack user list.
@@ -1339,12 +880,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/stackUserList" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageStackUserList(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/stackUserList";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageStackUserList(string packageId);
 
     /// <summary>
     ///     Get access and error logs for the site.
@@ -1352,12 +888,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/logs" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebLogs(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/logs";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebLogs(string packageId);
 
     /// <summary>
     ///     Returns the current mailbox config.
@@ -1366,12 +897,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="mailId">The id of the mail</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageEmailMailbox(string packageId, string mailId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/email/" + mailId + "/mailbox";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageEmailMailbox(string packageId, string mailId);
 
     /// <summary>
     ///     Get maintenance mode settings for this web.
@@ -1379,12 +905,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/maintenanceMode" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMaintenanceMode(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/maintenanceMode";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebMaintenanceMode(string packageId);
 
     /// <summary>
     ///     Set maintenance mode settings for this web.
@@ -1394,12 +915,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMaintenanceMode(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/maintenanceMode";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebMaintenanceMode(string packageId, string body);
 
     /// <summary>
     ///     Get the malware scan objects for this web
@@ -1407,12 +923,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/malwareScan" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMalwareScan(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/malwareScan";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebMalwareScan(string packageId);
 
     /// <summary>
     ///     Set Mailware Scan lock state, setting to "new" will request a new scan
@@ -1422,10 +933,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMalwareScan(string packageId, string body)
-    {
-        return await this._requestHandler.PostAsync(this._baseUrl + "package/" + packageId + "/web/malwareScan", this._bearer, body);
-    }
+    Task<string> PackageWebMalwareScan(string packageId, string body);
 
     /// <summary>
     ///     Add a user to an MSSQL database.
@@ -1435,12 +943,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMssqlUsers(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/mssqlUsers";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebMssqlUsers(string packageId, string body);
 
     /// <summary>
     ///     Get MSSQL Databases.
@@ -1448,12 +951,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/mssqlDatabases" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMssqlDatabases(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/mssqlDatabases";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebMssqlDatabases(string packageId);
 
     /// <summary>
     ///     Create a new MSSQL Database and a user with the same name.
@@ -1463,12 +961,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMssqlDatabases(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/mssqlDatabases";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebMssqlDatabases(string packageId, string body);
 
     /// <summary>
     ///     Remove an MSSQL database.
@@ -1478,12 +971,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebRemoveMssqlDatabase(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/removeMssqlDatabase";
-        var response = await _requestHandler.PostAsync(url, _bearer,body);
-        return response;
-    }
+    Task<string> PackageWebRemoveMssqlDatabase(string packageId, string body);
 
     /// <summary>
     ///     Remove an MSSQL user.
@@ -1493,12 +981,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebRemoveMssqlUser(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/removeMssqlUser";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebRemoveMssqlUser(string packageId, string body);
 
     /// <summary>
     ///     Update the password for an MSSQL user.
@@ -1508,12 +991,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMssqlUserPassword(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/mssqlUserPassword";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebMssqlUserPassword(string packageId, string body);
 
     /// <summary>
     ///     Get all MySQL databases.
@@ -1521,12 +999,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/mysqlDatabases" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMysqlDatabases(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/mysqlDatabases";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebMysqlDatabases(string packageId);
 
     /// <summary>
     ///     Create a MySQL database.
@@ -1536,12 +1009,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMysqlDatabase(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/mysqlDatabases";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebMysqlDatabase(string packageId, string body);
 
     /// <summary>
     ///     Get the external IP addresses that MySQL users are allowed to connect to remotely.
@@ -1549,12 +1017,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/mysqlUserIpAcl" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMysqlUserIpAcl(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/mysqlUserIpAcl";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebMysqlUserIpAcl(string packageId);
 
     /// <summary>
     ///     Update the external IP addresses that MySQL users are allowed to connect to remotely.
@@ -1564,12 +1027,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMysqlUserIpAcl(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/mysqlUserIpAcl";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebMysqlUserIpAcl(string packageId, string body);
 
     /// <summary>
     ///     Remove a MySQL database.
@@ -1579,12 +1037,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebRemoveMysqlDatabase(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/removeMysqlDatabase";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebRemoveMysqlDatabase(string packageId, string body);
 
     /// <summary>
     ///     Remove a MySQL user.
@@ -1594,12 +1047,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebRemoveMysqlUser(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/removeMysqlUser";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebRemoveMysqlUser(string packageId, string body);
 
     /// <summary>
     ///     Get a list of each MySQL database server and a Single Sign on link for each.
@@ -1607,12 +1055,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/mysqlSSO" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMysqlSso(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/mysqlSSO";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebMysqlSso(string packageId);
 
     /// <summary>
     ///     Grant an existing user the default privileges on a database.
@@ -1622,12 +1065,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMysqlGrantUserDatabase(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/mysqlGrantUserDatabase";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebMysqlGrantUserDatabase(string packageId, string body);
 
     /// <summary>
     ///     Get the grants for MySQL users and databases.
@@ -1635,12 +1073,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/mysqlGrants" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMysqlGrants(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/mysqlGrants";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebMysqlGrants(string packageId);
 
     /// <summary>
     ///     Update the grants for MySQL users and databases.
@@ -1650,12 +1083,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMysqlGrants(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/mysqlGrants";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebMysqlGrants(string packageId, string body);
 
     /// <summary>
     ///     Update a MySQL user's password.
@@ -1665,13 +1093,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMysqlUserPassword(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/mysqlUserPassword";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
-
+    Task<string> PackageWebMysqlUserPassword(string packageId, string body);
 
     /// <summary>
     ///     Get all mysql users.
@@ -1679,12 +1101,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/mysqlUsers" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMysqlUsers(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/mysqlUsers";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebMysqlUsers(string packageId);
 
     /// <summary>
     ///     Create a new mysql user.
@@ -1694,12 +1111,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebMysqlUsers(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/mysqlUsers";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebMysqlUsers(string packageId, string body);
 
     /// <summary>
     ///     Returns an array for One Click objects that contain details of the current version and details in use
@@ -1707,12 +1119,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/oneclick" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebOneclick(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/oneclick";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebOneclick(string packageId);
 
     /// <summary>
     ///     Install a One Click package.
@@ -1725,12 +1132,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebOneclick(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/oneclick";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebOneclick(string packageId, string body);
 
     /// <summary>
     ///     Returns detailed information about the package.
@@ -1738,26 +1140,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWeb(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
-
-    /// <summary>
-    ///     Returns an array representation of the package.
-    /// </summary>
-    /// <see href="https://api.20i.com/package/{package_id}" />
-    /// 
-    /// <param name="packageId">The id of the package</param>
-    /// <returns>The raw json response as a string</returns>
-    public async Task<string> Package(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId;
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWeb(string packageId);
 
     /// <summary>
     ///     Returns the limits set of this package bundle type.
@@ -1765,12 +1148,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/bundleType/limits" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageBundleTypeLimits(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/bundleType/limits";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageBundleTypeLimits(string packageId);
 
     /// <summary>
     ///     Get the password protected directories.
@@ -1778,12 +1156,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/passwordProtection" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebPasswordProtection(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/passwordProtection";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebPasswordProtection(string packageId);
 
     /// <summary>
     ///     Set the password protected directories
@@ -1793,12 +1166,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebPasswordProtection(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/passwordProtection";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebPasswordProtection(string packageId, string body);
 
     /// <summary>
     ///     Get all available PHP versions.
@@ -1806,12 +1174,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/availablePhpVersions" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebAvailablePhpVersions(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/availablePhpVersions";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebAvailablePhpVersions(string packageId);
 
     /// <summary>
     ///     Returns the PHP config for a name.
@@ -1820,12 +1183,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="phpConfigId">The id of the php config</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebPhpConfig(string packageId, string phpConfigId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/phpConfig/" + phpConfigId;
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebPhpConfig(string packageId, string phpConfigId);
 
     /// <summary>
     ///     Get allowed PHP configuration directives.
@@ -1833,12 +1191,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/allowedPhpConfiguration" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebAllowedPhpConfiguration(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/allowedPhpConfiguration";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebAllowedPhpConfiguration(string packageId);
 
     /// <summary>
     ///     Update the PHP configuration for a name.
@@ -1849,12 +1202,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="phpConfigId">The id of the php config</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebPhpConfigUpdateConfig(string packageId, string phpConfigId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/phpConfig/" + phpConfigId + "/updateConfig";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebPhpConfigUpdateConfig(string packageId, string phpConfigId, string body);
 
     /// <summary>
     ///     Get the PHP version for the site.
@@ -1862,12 +1210,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/phpVersion" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebPhpVersion(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/phpVersion";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebPhpVersion(string packageId);
 
     /// <summary>
     ///     Set the PHP version for the site.
@@ -1877,12 +1220,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebPhpVersion(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/phpVersion";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebPhpVersion(string packageId, string body);
 
     /// <summary>
     ///     Returns a list of redirects for the site.
@@ -1890,12 +1228,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/redirects" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebRedirects(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/redirects";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebRedirects(string packageId);
 
     /// <summary>
     ///     Set the website redirects.
@@ -1905,12 +1238,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebRedirects(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/redirects";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebRedirects(string packageId, string body);
 
     /// <summary>
     ///     Returns the expiry date at the registry.
@@ -1921,12 +1249,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainUpstreamExpiryDate(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/upstreamExpiryDate";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainUpstreamExpiryDate(string packageId, string domainId);
 
     /// <summary>
     ///     Restore a backup file which has been uploaded via FTP
@@ -1936,12 +1259,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebRestoreWebsiteBackup(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/restoreWebsiteBackup";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebRestoreWebsiteBackup(string packageId, string body);
 
     /// <summary>
     ///     Returns an array of currently configured cron tasks.
@@ -1949,12 +1267,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/tasks" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebTasks(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/tasks";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebTasks(string packageId);
 
     /// <summary>
     ///     Update, create or delete cron task.
@@ -1968,12 +1281,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebTasks(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/tasks";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebTasks(string packageId, string body);
 
     /// <summary>
     ///     Test a cron task.
@@ -1983,12 +1291,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebTestCronTask(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/testCronTask";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebTestCronTask(string packageId, string body);
 
     /// <summary>
     ///     Returns the limits for the session. If the user is a super user then they are exempt from explicit limit
@@ -1998,12 +1301,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainSessionlimits(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/sessionlimits";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainSessionlimits(string packageId, string domainId);
 
     /// <summary>
     ///     Returns the limits for the session. If the user is a super user then they are exempt from explicit limit
@@ -2012,12 +1310,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/sessionlimits" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageSessionlimits(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/sessionlimits";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageSessionlimits(string packageId);
 
     /// <summary>
     ///     Add or Remove a label for this domain
@@ -2028,12 +1321,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="domainId">The id of the domain</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainLabels(string packageId, string domainId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/labels";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageDomainLabels(string packageId, string domainId, string body);
 
     /// <summary>
     ///     Get the sitemap jobs, only returls a single jobs (last returned from platform)
@@ -2041,12 +1329,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/sitemap" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebSitemap(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/sitemap";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebSitemap(string packageId);
 
     /// <summary>
     ///     Start a sitemap job.
@@ -2055,12 +1338,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     /// <remarks> sample body: { } </remarks>
-    public async Task<string> PackageWebSitemapStart(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/sitemap";
-        var response = await _requestHandler.PostAsync(url, "{}", _bearer);
-        return response;
-    }
+    Task<string> PackageWebSitemapStart(string packageId);
 
     /// <summary>
     ///     Re-install from platform. This will re-install software in the hosting space.
@@ -2069,12 +1347,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/reinstall" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebReinstall(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/reinstall";
-        var response = await _requestHandler.PostAsync(url, "{}", _bearer);
-        return response;
-    }
+    Task<string> PackageWebReinstall(string packageId);
 
     /// <summary>
     ///     Set ssh authenticator status.
@@ -2084,12 +1357,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebSshAuthenticator(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/sshauthenticator";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebSshAuthenticator(string packageId, string body);
 
     /// <summary>
     ///     Get a list of SSH keys for this package.
@@ -2097,12 +1365,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/sshkeys" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebSshKeys(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/sshkeys";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebSshKeys(string packageId);
 
     /// <summary>
     ///     Update or add new SSH keys.
@@ -2112,12 +1375,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebSshKeysUpdate(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/sshkeys";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebSshKeysUpdate(string packageId, string body);
 
     /// <summary>
     ///     Get the SSH password for this package.
@@ -2125,12 +1383,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/sshpassword" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebSshPassword(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/sshpassword";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebSshPassword(string packageId);
 
     /// <summary>
     ///     Set the SSH password for this package.
@@ -2140,12 +1393,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebSshPasswordUpdate(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/sshpassword";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebSshPasswordUpdate(string packageId, string body);
 
     /// <summary>
     ///     This will toggle the free SSL for a web name.
@@ -2156,12 +1404,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebFreeSsl(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/freeSSL";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebFreeSsl(string packageId, string body);
 
     /// <summary>
     ///     Gets an array of all the certificates attached to virtual hosts on this web.
@@ -2170,12 +1413,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/certificates" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebCertificates(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/certificates";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebCertificates(string packageId);
 
     /// <summary>
     ///     Remove or update certificates from the Web. Currently only remove is supported.
@@ -2185,12 +1423,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebCertificatesUpdate(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/certificates";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebCertificatesUpdate(string packageId, string body);
 
     /// <summary>
     ///     Returns whether the site has forced SSL.
@@ -2198,12 +1431,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/forceSSL" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebForceSsl(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/forceSSL";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebForceSsl(string packageId);
 
     /// <summary>
     ///     Sets the Force SSL flag for a site.
@@ -2213,12 +1441,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebForceSsl(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/forceSSL";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebForceSsl(string packageId, string body);
 
     /// <summary>
     ///     Install an external SSL certificate.
@@ -2228,12 +1451,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebExternalSsl(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/externalSSL";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebExternalSsl(string packageId, string body);
 
     /// <summary>
     ///     Get stack cache settings
@@ -2241,12 +1459,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/stackCache" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebStackCache(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/stackCache";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebStackCache(string packageId);
 
     /// <summary>
     ///     Create or update stack cache settings
@@ -2256,12 +1469,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebStackCache(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/stackCache";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebStackCache(string packageId, string body);
 
     /// <summary>
     ///     Returns the list of subdomain names mapped to their document roots.
@@ -2269,12 +1477,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/subdomains" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebSubdomains(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/subdomains";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebSubdomains(string packageId);
 
     /// <summary>
     ///     This does the same as POSTing to /names except that it enforces the subdomain limit and disallows non-subdomains.
@@ -2284,12 +1487,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The raw json body</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebSubdomains(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/subdomains";
-        var response = await _requestHandler.PostAsync(url,_bearer,body);
-        return response;
-    }
+    Task<string> PackageWebSubdomains(string packageId, string body);
 
     /// <summary>
     ///     Cancel an incoming transfer. If successful, this will also refund to balance.
@@ -2298,12 +1496,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainCancelTransfer(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/cancelTransfer";
-        var response = await _requestHandler.PostAsync(url, _bearer, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainCancelTransfer(string packageId, string domainId);
 
     /// <summary>
     ///     Change the IPS-tag for a domain.
@@ -2315,12 +1508,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="domainId">The id of the domain</param>
     /// <remarks> body: {new-tag:"string"} </remarks>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainTag(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/tag";
-        var response = await _requestHandler.PostAsync(url, _bearer, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainTag(string packageId, string domainId);
 
     /// <summary>
     ///     Returns the domain's EPP auth code, as needed for outbound transfers in some circumstances.
@@ -2331,12 +1519,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainAuthcode(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/authcode";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainAuthcode(string packageId, string domainId);
 
     /// <summary>
     ///     Returns information about the pending transfer (if any).
@@ -2345,12 +1528,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainTransferInfo(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/transferinfo";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainTransferInfo(string packageId, string domainId);
 
     /// <summary>
     ///     Get the flag allowing or disallowing transfers.
@@ -2359,12 +1537,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainCanTransfer(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/canTransfer";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainCanTransfer(string packageId, string domainId);
 
     /// <summary>
     ///     Set the flag allowing or disallowing transfers, aka the "domain lock".
@@ -2375,13 +1548,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="domainId">The id of the domain</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainCanTransfer(string packageId, string domainId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/canTransfer";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
-
+    Task<string> PackageDomainCanTransfer(string packageId, string domainId, string body);
 
     /// <summary>
     ///     Modify an incoming transfer.
@@ -2392,12 +1559,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="domainId">The id of the domain</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainUpdateTransfer(string packageId, string domainId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/updateTransfer";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageDomainUpdateTransfer(string packageId, string domainId, string body);
 
     /// <summary>
     ///     Resend the registrant verification email, if one applies.
@@ -2408,12 +1570,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="domainId">The id of the domain</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainResendVerificationEmail(string packageId, string domainId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/resendVerificationEmail";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageDomainResendVerificationEmail(string packageId, string domainId, string body);
 
     /// <summary>
     ///     Returns true if this domain is waiting for transfer completion.
@@ -2422,12 +1579,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainPendingTransfer(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/pendingTransfer";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainPendingTransfer(string packageId, string domainId);
 
     /// <summary>
     ///     Returns the Website Builder SSO link.
@@ -2435,12 +1587,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/websiteBuilderSso" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWebsiteBuilderSso(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/websiteBuilderSso";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebWebsiteBuilderSso(string packageId);
 
     /// <summary>
     ///     Get report details for Web disk usage.
@@ -2450,12 +1597,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebDiskUsage(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/diskUsage";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebDiskUsage(string packageId, string body);
 
     /// <summary>
     ///     Get the bandwidth and disk usage stats for the current package
@@ -2463,12 +1605,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/usage" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebUsage(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/usage";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebUsage(string packageId);
 
     /// <summary>
     ///     Generate a webmail single-sign-on URL
@@ -2479,12 +1616,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="mailId">The id of the mail</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageEmailWebmail(string packageId, string mailId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/email/" + mailId + "/webmail";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageEmailWebmail(string packageId, string mailId, string body);
 
     /// <summary>
     ///     Sends or re-sends the welcome email
@@ -2495,12 +1627,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageSendWelcome(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/sendWelcome";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageSendWelcome(string packageId, string body);
 
     /// <summary>
     ///     Returns the current live WHOIS text for the domain. Only works for domains registered with 20i.
@@ -2509,12 +1636,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="domainId">The id of the domain</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageDomainWhois(string packageId, string domainId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/domain/" + domainId + "/whois";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageDomainWhois(string packageId, string domainId);
 
     /// <summary>
     ///     Recycle a Windows application pool.
@@ -2523,12 +1645,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
     /// <remarks> body: {  } </remarks>
-    public async Task<string> PackageWebRecycleApplicationPool(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/recycleApplicationPool";
-        var response = await _requestHandler.PostAsync(url, _bearer, "{}");
-        return response;
-    }
+    Task<string> PackageWebRecycleApplicationPool(string packageId);
 
     /// <summary>
     ///     Get the existing Windows configuration.
@@ -2536,12 +1653,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/windowsConfiguration" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWindowsConfiguration(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/windowsConfiguration";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebWindowsConfiguration(string packageId);
 
     /// <summary>
     ///     Update the Windows application pool configuration.
@@ -2552,12 +1664,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWindowsConfiguration(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/windowsConfiguration";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebWindowsConfiguration(string packageId, string body);
 
     /// <summary>
     ///     Get the WordPress administrator users.
@@ -2565,12 +1672,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/wordpressAdministrators" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressAdministrators(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressAdministrators";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebWordpressAdministrators(string packageId);
 
     /// <summary>
     ///     Get a checksum report of WordPress core files.
@@ -2578,12 +1680,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/wordpressChecksum" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressChecksum(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressChecksum";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebWordpressChecksum(string packageId);
 
     /// <summary>
     ///     Ask the platform to fix any checksum issues
@@ -2593,12 +1690,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressChecksum(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressChecksum";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebWordpressChecksum(string packageId, string body);
 
     /// <summary>
     ///     Returns a boolean denoting the result of the wordpress database check.
@@ -2606,12 +1698,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/wordpressDbCheck" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressDbCheck(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressDbCheck";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebWordpressDbCheck(string packageId);
 
     /// <summary>
     ///     Install the StackCache plugin for this package.
@@ -2621,12 +1708,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressInstallStackCache(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressInstallStackCache";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebWordpressInstallStackCache(string packageId, string body);
 
     /// <summary>
     ///     Checks whether or not WordPress is currently installed.
@@ -2634,12 +1716,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/wordpressIsInstalled" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressIsInstalled(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressIsInstalled";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebWordpressIsInstalled(string packageId);
 
     /// <summary>
     ///     Returns an array of Installed wordpress plugins.
@@ -2647,12 +1724,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/wordpressPlugins" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressPlugins(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressPlugins";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebWordpressPlugins(string packageId);
 
     /// <summary>
     ///     Set status or remove a WordPress plugin.
@@ -2662,12 +1734,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressPlugins(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressPlugins";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebWordpressPlugins(string packageId, string body);
 
     /// <summary>
     ///     Get the WordPress roles.
@@ -2675,12 +1742,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/wordpressRoles" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressRoles(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressRoles";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebWordpressRoles(string packageId);
 
     /// <summary>
     ///     Perform a WordPress search and replace.
@@ -2690,12 +1752,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressSearchReplace(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressSearchReplace";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebWordpressSearchReplace(string packageId, string body);
 
     /// <summary>
     ///     Get the WordPress site settings
@@ -2703,12 +1760,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/wordpressSettings" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressSettings(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressSettings";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebWordpressSettings(string packageId);
 
     /// <summary>
     ///     Set a WordPress site setting
@@ -2718,12 +1770,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressSettings(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressSettings";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebWordpressSettings(string packageId, string body);
 
     /// <summary>
     ///     Remove a staging clone by id
@@ -2733,12 +1780,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressStagingRemoveClone(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressStagingRemoveClone";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebWordpressStagingRemoveClone(string packageId, string body);
 
     /// <summary>
     ///     Returns a result based on whether the staging version is in place.
@@ -2746,12 +1788,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/wordpressStaging" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressStaging(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressStaging";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebWordpressStaging(string packageId);
 
     /// <summary>
     ///     Clone a new WordPress site either from live to staging or from staging to live.
@@ -2761,12 +1798,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressStaging(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressStaging";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebWordpressStaging(string packageId, string body);
 
     /// <summary>
     ///     Returns an array of the installed WordPress themes.
@@ -2774,12 +1806,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/wordpressThemes" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressThemes(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressThemes";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebWordpressThemes(string packageId);
 
     /// <summary>
     ///     Set status (i.e. activate/deactivate) or remove a WordPress theme.
@@ -2789,12 +1816,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressTheme(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressTheme";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebWordpressTheme(string packageId, string body);
 
     /// <summary>
     ///     Update WordPress to the latest version.
@@ -2804,12 +1826,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="packageId">The id of the package</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressUpdate(string packageId, string body)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressUpdate";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> PackageWebWordpressUpdate(string packageId, string body);
 
     /// <summary>
     ///     Get Wordpress Users
@@ -2817,12 +1834,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/wordpressUsers" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressUsers(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressUsers";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PackageWebWordpressUsers(string packageId);
 
     /// <summary>
     ///     Get the WordPress version if installed.
@@ -2830,16 +1842,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/package/{package_id}/web/wordpressVersion" />
     /// <param name="packageId">The id of the package</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PackageWebWordpressVersion(string packageId)
-    {
-        var url = _baseUrl + "package/" + packageId + "/web/wordpressVersion";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
-
-    #endregion
-
-    #region Reseller
+    Task<string> PackageWebWordpressVersion(string packageId);
 
     /// <summary>
     ///     Transfer a domain name.
@@ -2862,12 +1865,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerTransferDomain(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/transferDomain";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerTransferDomain(string resellerId, string body);
 
     /// <summary>
     ///     Get the password reset email template (or the default value)
@@ -2875,12 +1873,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/reseller/{reseller_id}/passwordResetEmail" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerPasswordResetEmail(string resellerId)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/passwordResetEmail";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> ResellerPasswordResetEmail(string resellerId);
 
     /// <summary>
     ///     Set the password reset email.
@@ -2890,12 +1883,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerPasswordResetEmail(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/passwordResetEmail";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerPasswordResetEmail(string resellerId, string body);
 
     /// <summary>
     ///     Mailbox quota addons Returns a short, cheap list items.
@@ -2903,12 +1891,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/reseller/{reseller_id}/mailbox_quota_addon" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerMailboxQuotaAddon(string resellerId)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/mailbox_quota_addon";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> ResellerMailboxQuotaAddon(string resellerId);
 
     /// <summary>
     ///     List Virtual Nameservers
@@ -2916,12 +1899,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/personal_nameserver" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> PersonalNameserver(string resellerId)
-    {
-        var url = _baseUrl + "personal_nameserver";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> PersonalNameserver(string resellerId);
 
     /// <summary>
     ///     Renew an MSSQL database with the provided ID
@@ -2931,12 +1909,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerRenewMssqlPre(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/renewMssqlPre";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerRenewMssqlPre(string resellerId, string body);
 
     /// <summary>
     ///     Get existing multisite backups.
@@ -2944,12 +1917,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/reseller/{reseller_id}/backupBulkPackages" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerBackupBulkPackages(string resellerId)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/backupBulkPackages";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> ResellerBackupBulkPackages(string resellerId);
 
     /// <summary>
     ///     Backup Multiple packages
@@ -2959,12 +1927,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerBackupBulkPackages(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/backupBulkPackages";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerBackupBulkPackages(string resellerId, string body);
 
     /// <summary>
     ///     Fetch your current Nominet brand settings
@@ -2972,12 +1935,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/reseller/{reseller_id}/nominetBrand" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerNominetBrand(string resellerId)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/nominetBrand";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> ResellerNominetBrand(string resellerId);
 
     /// <summary>
     ///     Set Nominet reseller settings
@@ -2990,12 +1948,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerNominetBrand(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/nominetBrand";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerNominetBrand(string resellerId, string body);
 
     /// <summary>
     ///     Register a domain name.
@@ -3016,12 +1969,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerAddDomain(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/addDomain";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerAddDomain(string resellerId, string body);
 
     /// <summary>
     ///     Add an MS SQL Server allowance.
@@ -3034,12 +1982,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerAddMssql(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/addMssql";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerAddMssql(string resellerId, string body);
 
     /// <summary>
     ///     Order a TLS certificate for a site.
@@ -3050,12 +1993,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerAddTlsCertificate(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/addTlsCertificate";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerAddTlsCertificate(string resellerId, string body);
 
     /// <summary>
     ///     Order a vps
@@ -3068,12 +2006,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerAddVps(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/addVPS";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerAddVps(string resellerId, string body);
 
     /// <summary>
     ///     Add a web site.
@@ -3088,12 +2021,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerAddWeb(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/addWeb";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerAddWeb(string resellerId, string body);
 
     /// <summary>
     ///     Fetch the package branding.
@@ -3103,12 +2031,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerPackageTypeBrand(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/packageTypeBrand";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerPackageTypeBrand(string resellerId, string body);
 
     /// <summary>
     ///     Returns a count of packages split by type. Current types are linux, windows and wordpress
@@ -3116,12 +2039,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/reseller/{reseller_id}/packageCount" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerPackageCount(string resellerId)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/packageCount";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> ResellerPackageCount(string resellerId);
 
     /// <summary>
     ///     Delete the web site/packages using the array of ID's in delete-id as a list of packages to delete.
@@ -3131,12 +2049,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerDeleteWeb(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/deleteWeb";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerDeleteWeb(string resellerId, string body);
 
     /// <summary>
     ///     Get package type information.
@@ -3144,12 +2057,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/reseller/{reseller_id}/packageTypes" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerPackageTypes(string resellerId)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/packageTypes";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> ResellerPackageTypes(string resellerId);
 
     /// <summary>
     ///     Add a web type.
@@ -3164,12 +2072,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerPackageTypes(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/packageTypes";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerPackageTypes(string resellerId, string body);
 
     /// <summary>
     ///     Update web types.
@@ -3183,12 +2086,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerUpdateWebType(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/updateWebType";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerUpdateWebType(string resellerId, string body);
 
     /// <summary>
     ///     Delete web sites or update their limits or labels.
@@ -3202,12 +2100,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerUpdatePackage(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/updatePackage";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerUpdatePackage(string resellerId, string body);
 
     /// <summary>
     ///     Sends a password reset email, given a password reset token. See passwordResetInfo on the authentication service.
@@ -3216,12 +2109,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerResetPassword(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/resetPassword";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerResetPassword(string resellerId, string body);
 
     /// <summary>
     ///     Renew a domain name.
@@ -3234,12 +2122,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerRenewDomain(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/renewDomain";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerRenewDomain(string resellerId, string body);
 
     /// <summary>
     ///     Renew the MSSQL database of the given ID This will charge the appropriate registration fee to your 20i Balance.
@@ -3251,12 +2134,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerRenewMssql(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/renewMssql";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerRenewMssql(string resellerId, string body);
 
     /// <summary>
     ///     Renew a certificate. This will charge the appropriate fee to your 20i Balance.
@@ -3269,12 +2147,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerRenewTlsCertificate(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/renewTlsCertificate";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerRenewTlsCertificate(string resellerId, string body);
 
     /// <summary>
     ///     Updates the reseller
@@ -3287,12 +2160,7 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerUpdate(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId;
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
+    Task<string> ResellerUpdate(string resellerId, string body);
 
     /// <summary>
     ///     Returns your Stack user config.
@@ -3300,12 +2168,7 @@ public class TwentyIApi : ITwentyIApi
     /// <see href="https://api.20i.com/reseller/{reseller_id}/susers" />
     /// <param name="resellerId">The id of the reseller</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerSusers(string resellerId)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/susers";
-        var response = await _requestHandler.GetAsync(url, _bearer);
-        return response;
-    }
+    Task<string> ResellerSusers(string resellerId);
 
     /// <summary>
     ///     Update your Stack users.
@@ -3324,12 +2187,5 @@ public class TwentyIApi : ITwentyIApi
     /// <param name="resellerId">The id of the reseller</param>
     /// <param name="body">The body of the request</param>
     /// <returns>The raw json response as a string</returns>
-    public async Task<string> ResellerSusersUpdate(string resellerId, string body)
-    {
-        var url = _baseUrl + "reseller/" + resellerId + "/susers";
-        var response = await _requestHandler.PostAsync(url, _bearer, body);
-        return response;
-    }
-
-    #endregion
+    Task<string> ResellerSusersUpdate(string resellerId, string body);
 }
