@@ -1,6 +1,6 @@
 ﻿# 20i API dotnet libary
 
-![Nuget](https://img.shields.io/nuget/v/20i-api-dotnet?style=flat-square)  ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/kek-Sec/20i-api-dotnet/.NET?style=flat-square)
+![Nuget](https://img.shields.io/nuget/v/20i-api-dotnet?style=flat-square)  
 #### [Nuget Gallery](https://www.nuget.org/packages/20i-api/)
 
 
